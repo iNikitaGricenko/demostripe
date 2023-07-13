@@ -19,7 +19,7 @@ public class OrderItem {
 
     private long quantity;
 
-    private double unitPrice;
+    private long unitPrice;
 
     private String className;
 }

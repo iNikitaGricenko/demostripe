@@ -21,7 +21,7 @@ public class OrderService {
 	}
 
 	public long getTotalOrderPrice(Collection<OrderItem> orderItems) {
-		return orderItems.stream().mapToDouble(orderItem -> orderItem.getUnitPrice() * orderItem.getQuantity()).sum();
+		return orderItems.stream().mapToLong(orderItem -> orderItem.getUnitPrice() * orderItem.getQuantity()).sum();
 	}
 
 }
