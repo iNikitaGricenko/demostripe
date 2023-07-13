@@ -1,10 +1,10 @@
-package com.faceit.demostripe;
+package com.inikitagricenko.demo.stripe;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemostripeApplicationTests {
+class StripeApplicationTests {
 
     @Test
     void contextLoads() {
