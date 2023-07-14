@@ -2,7 +2,10 @@ package com.inikitagricenko.demo.stripe.model;
 
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Set;

@@ -2,7 +2,6 @@ package com.inikitagricenko.demo.stripe.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.inikitagricenko.demo.stripe.model.Customer;
-import com.inikitagricenko.demo.stripe.model.OrderItem;
 import com.inikitagricenko.demo.stripe.model.Product;
 import com.inikitagricenko.demo.stripe.model.Subscription;
 import com.inikitagricenko.demo.stripe.model.enums.Currency;

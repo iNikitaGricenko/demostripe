@@ -1,6 +1,5 @@
 package com.inikitagricenko.demo.stripe.service.stripe;
 
-import com.inikitagricenko.demo.stripe.model.OrderItem;
 import com.inikitagricenko.demo.stripe.model.Product;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;

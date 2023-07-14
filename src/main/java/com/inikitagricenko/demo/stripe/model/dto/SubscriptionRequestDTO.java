@@ -1,6 +1,5 @@
 package com.inikitagricenko.demo.stripe.model.dto;
 
-import com.inikitagricenko.demo.stripe.model.OrderItem;
 import com.inikitagricenko.demo.stripe.model.Product;
 import com.inikitagricenko.demo.stripe.model.Subscription;
 import com.inikitagricenko.demo.stripe.model.enums.Currency;

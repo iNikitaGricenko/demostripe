@@ -20,6 +20,8 @@ public class Product {
 
 	private Long unityAmount;
 
+	private boolean shippable;
+
 	private Currency currency;
 
 }

@@ -1,9 +1,9 @@
 package com.inikitagricenko.demo.stripe.mapper;
 
+import com.inikitagricenko.demo.stripe.entity.CustomerEntity;
 import com.inikitagricenko.demo.stripe.model.Customer;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerRequestDTO;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerResponseDTO;
-import com.inikitagricenko.demo.stripe.entity.CustomerEntity;
 import org.mapstruct.*;
 
 import java.util.List;

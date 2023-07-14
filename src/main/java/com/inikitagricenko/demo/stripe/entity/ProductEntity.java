@@ -2,7 +2,10 @@ package com.inikitagricenko.demo.stripe.entity;
 
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
@@ -37,6 +40,9 @@ public class ProductEntity {
 
 	@Column(name = "unity_amount")
 	private Long unityAmount;
+
+	@Column(name = "shippable")
+	private boolean shippable = true;
 
 	@Enumerated
 	@Column(name = "currency")

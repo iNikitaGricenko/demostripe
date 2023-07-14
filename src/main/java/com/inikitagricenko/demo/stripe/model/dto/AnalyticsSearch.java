@@ -2,7 +2,6 @@ package com.inikitagricenko.demo.stripe.model.dto;
 
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
