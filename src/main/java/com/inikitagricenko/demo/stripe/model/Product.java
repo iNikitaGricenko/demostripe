@@ -10,6 +10,10 @@ public class Product {
 
 	private String stripeReference;
 
+	private String name;
+
+	private String description;
+
 	private Long price;
 
 	private Long quantity;
