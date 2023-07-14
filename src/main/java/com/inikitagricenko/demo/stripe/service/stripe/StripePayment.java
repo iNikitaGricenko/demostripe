@@ -1,4 +1,4 @@
-package com.inikitagricenko.demo.stripe.service;
+package com.inikitagricenko.demo.stripe.service.stripe;
 
 import com.inikitagricenko.demo.stripe.adapter.PaymentAdapter;
 import com.inikitagricenko.demo.stripe.model.CustomerOrder;

@@ -13,6 +13,8 @@ public class OrderItem {
 
     private Long id;
 
+    private String stripeReference;
+
     private String name;
 
     private String model;
@@ -20,6 +22,4 @@ public class OrderItem {
     private long quantity;
 
     private long unitPrice;
-
-    private String className;
 }

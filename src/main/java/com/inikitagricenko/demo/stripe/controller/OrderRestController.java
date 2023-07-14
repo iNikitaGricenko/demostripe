@@ -1,7 +1,7 @@
 package com.inikitagricenko.demo.stripe.controller;
 
-import com.inikitagricenko.demo.stripe.model.AnalyticsResponse;
-import com.inikitagricenko.demo.stripe.model.AnalyticsSearch;
+import com.inikitagricenko.demo.stripe.model.dto.AnalyticsResponse;
+import com.inikitagricenko.demo.stripe.model.dto.AnalyticsSearch;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerOrderRequestDTO;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerOrderResponseDTO;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;

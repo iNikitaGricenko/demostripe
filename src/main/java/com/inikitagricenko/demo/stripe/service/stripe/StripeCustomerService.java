@@ -1,4 +1,4 @@
-package com.inikitagricenko.demo.stripe.service;
+package com.inikitagricenko.demo.stripe.service.stripe;
 
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
@@ -27,9 +27,9 @@ public class StripeCustomerService {
 		}
 	}
 
-	public void deleteCustomer(String customerEmil) {
+	public void deleteCustomer(String customerId) {
 		try {
-			retrieve(customerEmil).delete();
+			retrieve(customerId).delete();
 		} catch (StripeException e) {
 			throw new RuntimeException(e);
 		}

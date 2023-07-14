@@ -25,12 +25,12 @@ public class CustomerController {
 	@GetMapping
 	public List<CustomerRequestDTO> retrieveAllCustomers() {
 		List<Customer> customer = customerOutputService.retrieveAll();
-		return customerMapper.toRequestDTO(customer);
+		return customerMapper.toRequest(customer);
 	}
 
 	@PostMapping
 	public Long addCustomer(@RequestBody CustomerRequestDTO customerRequest) {
-		Customer customer = customerMapper.toCustomerFromRequest(customerRequest);
+		Customer customer = customerMapper.toCustomer(customerRequest);
 		return customerInputService.addCustomer(customer);
 	}
 
@@ -42,7 +42,7 @@ public class CustomerController {
 	@GetMapping("/{customerId}")
 	public CustomerResponseDTO retrieveCustomer(@PathVariable Long customerId) {
 		Customer retrieved = customerOutputService.retrieve(customerId);
-		return customerMapper.toResponseDTO(retrieved);
+		return customerMapper.toResponse(retrieved);
 	}
 
 }

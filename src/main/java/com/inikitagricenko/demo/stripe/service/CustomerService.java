@@ -1,42 +1,43 @@
 package com.inikitagricenko.demo.stripe.service;
 
-import com.inikitagricenko.demo.stripe.adapter.CustomerInputAdapter;
-import com.inikitagricenko.demo.stripe.adapter.CustomerOutputAdapter;
 import com.inikitagricenko.demo.stripe.model.Customer;
+import com.inikitagricenko.demo.stripe.persistence.CustomerPersistence;
+import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
+import com.inikitagricenko.demo.stripe.service.stripe.StripeCustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerService implements CustomerInputAdapter, CustomerOutputAdapter {
+public class CustomerService implements ICustomerService {
 
 	private final StripeCustomerService stripeCustomerService;
+	private final CustomerPersistence customerPersistence;
 
 	@Override
 	public Long addCustomer(Customer customer) {
-		stripeCustomerService.addCustomer(customer.getEmail());
-		// TODO Save customer in database
-		return null; // TODO Return customerId from database
+		String reference = stripeCustomerService.addCustomer(customer.getEmail()).getId();
+		customer.setStripeReference(reference);
+		return customerPersistence.save(customer);
 	}
 
 	@Override
 	public void deleteCustomer(Long customerId) {
-		// TODO Retrieve customer email from database
-		// TODO Delete customer from stripe stripeCustomerService.deleteCustomer(customer.getEmail());
-		// TODO Delete customer from database
+		String reference = retrieve(customerId).getStripeReference();
+		stripeCustomerService.deleteCustomer(reference);
+		customerPersistence.delete(customerId);
 	}
 
 	@Override
 	public List<Customer> retrieveAll() {
-		return new ArrayList<>(); // TODO Retrieve all customers from database -> stripe
+		return customerPersistence.findAll();
 	}
 
 	@Override
 	public Customer retrieve(Long customerId) {
-		return null; // TODO Retrieve customer from database -> stripe
+		return customerPersistence.findById(customerId);
 	}
 
 }

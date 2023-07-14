@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.model;
 
+import jakarta.persistence.Entity;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,8 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class Customer {
 
-    @EqualsAndHashCode.Exclude
     private Long id;
+
+    private String stripeReference;
 
     private String firstName;
 
@@ -21,6 +23,5 @@ public class Customer {
 
     private String email;
 
-    @EqualsAndHashCode.Exclude
-    private LocalDateTime registerDate = LocalDateTime.now();
+    private LocalDateTime registerDate;
 }

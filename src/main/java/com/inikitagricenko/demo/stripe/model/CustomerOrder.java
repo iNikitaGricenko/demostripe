@@ -7,14 +7,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Builder
 @Data
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerOrder {
 
-    @EqualsAndHashCode.Exclude
     private Long id;
 
     private String paymentMethod;
@@ -33,20 +31,13 @@ public class CustomerOrder {
 
     private String description;
 
-    @Builder.Default
-    @EqualsAndHashCode.Exclude
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 
-    @Builder.Default
-    private OrderStatus status = OrderStatus.INPROGRESS;
+    private OrderStatus status;
 
     private LocalDateTime completed;
 
     private Customer customer;
-
-    private boolean isDeleted = false;
-
-    private LocalDateTime deletedAt;
 
     private Set<OrderItem> orderItems;
 }

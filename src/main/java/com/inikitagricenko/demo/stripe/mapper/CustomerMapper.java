@@ -3,20 +3,28 @@ package com.inikitagricenko.demo.stripe.mapper;
 import com.inikitagricenko.demo.stripe.model.Customer;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerRequestDTO;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerResponseDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import com.inikitagricenko.demo.stripe.entity.CustomerEntity;
+import org.mapstruct.*;
 
 import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface CustomerMapper {
-    Customer toCustomerFromRequest(CustomerRequestDTO customerRequestDTO);
+    Customer toCustomer(CustomerRequestDTO request);
 
-    CustomerRequestDTO toRequestDTO(Customer customer);
+    Customer toCustomer(CustomerResponseDTO response);
 
-    List<CustomerRequestDTO> toRequestDTO(List<Customer> customer);
+    Customer toCustomer(CustomerEntity entity);
 
-    Customer toCustomerFromResponse(CustomerResponseDTO customerResponseDTO);
+    CustomerEntity toEntity(Customer customer);
 
-    CustomerResponseDTO toResponseDTO(Customer customer);
+    CustomerRequestDTO toRequest(Customer customer);
+
+    List<CustomerRequestDTO> toRequest(List<Customer> customer);
+
+
+    CustomerResponseDTO toResponse(Customer customer);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    CustomerEntity partialUpdate(Customer updater, @MappingTarget CustomerEntity entity);
 }
