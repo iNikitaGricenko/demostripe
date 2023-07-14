@@ -4,7 +4,11 @@ import com.inikitagricenko.demo.stripe.model.OrderItem;
 import com.inikitagricenko.demo.stripe.model.Product;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
+import com.stripe.model.SubscriptionCollection;
+import com.stripe.model.SubscriptionItem;
 import com.stripe.param.SubscriptionCreateParams;
+import com.stripe.param.SubscriptionItemCreateParams;
+import com.stripe.param.SubscriptionListParams;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,61 @@ public class StripeSubscriptionService {
 		}
 	}
 
+	public void cancel(String subscriptionId) {
+		try {
+			Subscription subscription = retrieve(subscriptionId);
+
+			subscription.cancel();
+		} catch (StripeException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public String resume(String subscriptionId) {
+		try {
+			Subscription subscription = retrieve(subscriptionId);
+
+			return subscription.resume().getId();
+		} catch (StripeException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public List<Subscription> retrieveAll() {
+		try {
+			SubscriptionListParams subscriptionListParams = SubscriptionListParams.builder()
+					.setLimit(5L)
+					.build();
+
+			SubscriptionCollection subscriptions = Subscription.list(subscriptionListParams);
+			return subscriptions.getData();
+		} catch (StripeException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public Subscription retrieve(String subscriptionId) {
+		try {
+			return Subscription.retrieve(subscriptionId);
+		} catch (StripeException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void addItem(String subscriptionId, String productId, long quantity) {
+		try {
+			SubscriptionItemCreateParams subscriptionItemCreateParams = SubscriptionItemCreateParams.builder()
+					.setSubscription(subscriptionId)
+					.setPrice(productId)
+					.setQuantity(quantity)
+					.build();
+
+			SubscriptionItem.create(subscriptionItemCreateParams);
+		} catch (StripeException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	private SubscriptionCreateParams.Item convertProduct(Product product) {
 		SubscriptionCreateParams.Item.PriceData priceData = SubscriptionCreateParams.Item.PriceData.builder()
 				.setCurrency(product.getCurrency().getAbbreviation())
@@ -41,17 +100,4 @@ public class StripeSubscriptionService {
 				.setQuantity(product.getQuantity())
 				.build();
 	}
-
-	public void cancel(String subscriptionId) {
-
-	}
-
-	public List<Subscription> retrieveAll() {
-		return null;
-	}
-
-	public Subscription retrieve(String subscriptionId) {
-		return null;
-	}
-
 }
