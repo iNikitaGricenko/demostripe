@@ -38,8 +38,8 @@ public class ProductEntity {
 	@Column(name = "quantity")
 	private Long quantity;
 
-	@Column(name = "unity_amount")
-	private Long unityAmount;
+	@Column(name = "unit_amount")
+	private Long unitAmount;
 
 	@Column(name = "shippable")
 	private boolean shippable = true;

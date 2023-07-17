@@ -18,7 +18,7 @@ public class Product {
 
 	private Long quantity;
 
-	private Long unityAmount;
+	private Long unitAmount;
 
 	private boolean shippable;
 

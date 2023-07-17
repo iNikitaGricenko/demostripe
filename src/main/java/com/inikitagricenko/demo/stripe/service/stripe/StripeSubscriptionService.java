@@ -91,7 +91,7 @@ public class StripeSubscriptionService {
 		SubscriptionCreateParams.Item.PriceData priceData = SubscriptionCreateParams.Item.PriceData.builder()
 				.setCurrency(product.getCurrency().getAbbreviation())
 				.setProduct(product.getStripeReference())
-				.setUnitAmount(product.getUnityAmount())
+				.setUnitAmount(product.getUnitAmount())
 				.build();
 
 		return SubscriptionCreateParams.Item.builder()

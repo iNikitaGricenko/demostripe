@@ -24,7 +24,6 @@ import java.util.List;
 public class OrderRestController {
 
     @GetMapping
-    @PageableAsQueryParam
     public List<CustomerOrderResponseDTO> retrieveAllOrders() {
         return new ArrayList<>();
     }
