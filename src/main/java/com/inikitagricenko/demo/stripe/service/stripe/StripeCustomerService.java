@@ -9,6 +9,7 @@ import com.stripe.param.PaymentSourceCollectionCreateParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class StripeCustomerService {
 
 	public static final String MASTERCARD_SOURCE = "tok_mastercard";
+	public static final String VISA_SOURCE = "tok_visa";
 
 	public Customer addCustomer(com.inikitagricenko.demo.stripe.model.Customer customer) {
 		try {
@@ -29,17 +31,9 @@ public class StripeCustomerService {
 					.build();
 			Customer created = Customer.create(customerCreateParams);
 
-			CustomerRetrieveParams customerRetrieveParams = CustomerRetrieveParams.builder()
-					.addExpand("sources")
-					.build();
-			Customer retrieved = Customer.retrieve(created.getId(), customerRetrieveParams, null);
+			addMasterCardSource(retrieveWithSources(created.getId()));
 
-			PaymentSourceCollectionCreateParams paymentSourceCollectionCreateParams = PaymentSourceCollectionCreateParams.builder()
-					.setSource(MASTERCARD_SOURCE)
-					.build();
-			retrieved.getSources().create(paymentSourceCollectionCreateParams);
-
-			return retrieved;
+			return created;
 		} catch (StripeException e) {
 			throw new RuntimeException(e);
 		}
@@ -75,5 +69,28 @@ public class StripeCustomerService {
 		} catch (StripeException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public Customer retrieveWithSources(String customer) throws StripeException {
+		CustomerRetrieveParams customerRetrieveParams = CustomerRetrieveParams.builder()
+				.addExpand("sources")
+				.build();
+		return Customer.retrieve(customer, customerRetrieveParams, null);
+	}
+
+	@Async
+	public void addMasterCardSource(Customer customer) throws StripeException {
+		PaymentSourceCollectionCreateParams paymentSourceCollectionCreateParams = PaymentSourceCollectionCreateParams.builder()
+				.setSource(MASTERCARD_SOURCE)
+				.build();
+		customer.getSources().create(paymentSourceCollectionCreateParams);
+	}
+
+	@Async
+	public void addVisaSource(Customer customer) throws StripeException {
+		PaymentSourceCollectionCreateParams paymentSourceCollectionCreateParams = PaymentSourceCollectionCreateParams.builder()
+				.setSource(VISA_SOURCE)
+				.build();
+		customer.getSources().create(paymentSourceCollectionCreateParams);
 	}
 }
