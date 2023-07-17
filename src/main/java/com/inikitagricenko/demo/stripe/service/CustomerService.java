@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.service;
 
+import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
 import com.inikitagricenko.demo.stripe.model.Customer;
 import com.inikitagricenko.demo.stripe.persistence.CustomerPersistence;
 import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
@@ -18,6 +19,7 @@ public class CustomerService implements ICustomerService {
 	private final CustomerPersistence customerPersistence;
 
 	@Override
+	@PerformanceMonitor
 	public Long addCustomer(Customer customer) {
 		String reference = stripeCustomerService.addCustomer(customer.getEmail()).getId();
 		customer.setStripeReference(reference);
@@ -26,6 +28,7 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
+	@PerformanceMonitor
 	public void deleteCustomer(Long customerId) {
 		String reference = retrieve(customerId).getStripeReference();
 		stripeCustomerService.deleteCustomer(reference);
@@ -33,11 +36,13 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
+	@PerformanceMonitor
 	public List<Customer> retrieveAll() {
 		return customerPersistence.findAll();
 	}
 
 	@Override
+	@PerformanceMonitor
 	public Customer retrieve(Long customerId) {
 		return customerPersistence.findById(customerId);
 	}

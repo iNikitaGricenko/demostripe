@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.service;
 
+import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
 import com.inikitagricenko.demo.stripe.model.CustomerOrder;
 import com.inikitagricenko.demo.stripe.model.OrderItem;
 import com.inikitagricenko.demo.stripe.model.dto.AnalyticsResponse;
@@ -18,6 +19,7 @@ public class AnalyticsService implements IAnalyticsService {
 	private final IOderItemService orderItemService;
 
 	@Override
+	@PerformanceMonitor
 	public AnalyticsResponse getAnalytic(List<CustomerOrder> customerOrders) {
 		List<OrderItem> orderItems = new ArrayList<>();
 		customerOrders.stream().map(CustomerOrder::getOrderItems).forEach(orderItems::addAll);
