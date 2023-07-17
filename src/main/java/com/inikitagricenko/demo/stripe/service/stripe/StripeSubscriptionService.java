@@ -1,6 +1,7 @@
 package com.inikitagricenko.demo.stripe.service.stripe;
 
 import com.inikitagricenko.demo.stripe.model.Product;
+import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionCollection;
@@ -27,6 +28,8 @@ public class StripeSubscriptionService {
 					.build();
 
 			return Subscription.create(subscriptionCreateParams);
+		} catch (InvalidRequestException exception) {
+			throw new RuntimeException("Exception occurs", exception); // TODO throw backend exception here
 		} catch (StripeException e) {
 			throw new RuntimeException(e);
 		}
@@ -88,10 +91,16 @@ public class StripeSubscriptionService {
 	}
 
 	private SubscriptionCreateParams.Item convertProduct(Product product) {
+		SubscriptionCreateParams.Item.PriceData.Recurring recurring = SubscriptionCreateParams.Item.PriceData.Recurring.builder()
+				.setInterval(SubscriptionCreateParams.Item.PriceData.Recurring.Interval.MONTH)
+				.setIntervalCount(1L)
+				.build();
+
 		SubscriptionCreateParams.Item.PriceData priceData = SubscriptionCreateParams.Item.PriceData.builder()
 				.setCurrency(product.getCurrency().getAbbreviation())
 				.setProduct(product.getStripeReference())
 				.setUnitAmount(product.getUnitAmount())
+				.setRecurring(recurring)
 				.build();
 
 		return SubscriptionCreateParams.Item.builder()

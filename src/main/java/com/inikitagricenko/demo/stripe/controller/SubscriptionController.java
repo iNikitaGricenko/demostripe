@@ -7,6 +7,7 @@ import com.inikitagricenko.demo.stripe.model.Subscription;
 import com.inikitagricenko.demo.stripe.model.dto.SubscriptionRequestDTO;
 import com.inikitagricenko.demo.stripe.model.dto.SubscriptionResponseDTO;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +36,7 @@ public class SubscriptionController {
 	}
 
 	@PostMapping
-	public Long addSubscription(@RequestBody SubscriptionRequestDTO requestDTO) {
+	public Long addSubscription(@Valid @RequestBody SubscriptionRequestDTO requestDTO) {
 		Subscription subscription = subscriptionMapper.toEntity(requestDTO);
 		return subscriptionInputAdapter.add(subscription);
 	}

@@ -35,4 +35,8 @@ public class ProductPersistence {
 	public List<Product> findAll() {
 		return productMapper.toProduct(productRepository.findAll());
 	}
+
+	public List<Product> findAll(List<Long> ids) {
+		return productMapper.toProduct(productRepository.findAllById(ids));
+	}
 }

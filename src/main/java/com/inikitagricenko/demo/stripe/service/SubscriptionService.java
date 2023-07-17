@@ -1,9 +1,11 @@
 package com.inikitagricenko.demo.stripe.service;
 
 import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
+import com.inikitagricenko.demo.stripe.model.Product;
 import com.inikitagricenko.demo.stripe.model.Subscription;
 import com.inikitagricenko.demo.stripe.persistence.SubscriptionPersistence;
 import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
+import com.inikitagricenko.demo.stripe.service.interfaces.IProductService;
 import com.inikitagricenko.demo.stripe.service.interfaces.ISubscriptionService;
 import com.inikitagricenko.demo.stripe.service.stripe.StripeSubscriptionService;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +20,16 @@ public class SubscriptionService implements ISubscriptionService {
 
 	private final StripeSubscriptionService stripeSubscriptionService;
 	private final SubscriptionPersistence subscriptionPersistence;
+	private final IProductService productService;
 	private final ICustomerService customerService;
 
 	@Override
 	@PerformanceMonitor
 	public Long add(Subscription subscription) {
 		String customerReference = customerService.retrieve(subscription.getCustomer().getId()).getStripeReference();
-		String subscriptionReference = stripeSubscriptionService.subscribeCustomer(customerReference, subscription.getProductList()).getId();
+		List<Product> products = productService.retrieveAll(subscription.getProductList().stream().map(Product::getId).toList());
+
+		String subscriptionReference = stripeSubscriptionService.subscribeCustomer(customerReference, products).getId();
 		subscription.setStripeReference(subscriptionReference);
 		subscription.setCreated(LocalDateTime.now());
 		return subscriptionPersistence.save(subscription);

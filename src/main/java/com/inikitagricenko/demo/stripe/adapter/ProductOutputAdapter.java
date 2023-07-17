@@ -10,4 +10,6 @@ public interface ProductOutputAdapter {
 
 	List<Product> retrieveAll();
 
+	List<Product> retrieveAll(List<Long> productIds);
+
 }

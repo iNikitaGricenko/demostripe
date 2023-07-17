@@ -44,4 +44,9 @@ public class ProductService implements IProductService {
 	public List<Product> retrieveAll() {
 		return productPersistence.findAll();
 	}
+
+	@Override
+	public List<Product> retrieveAll(List<Long> productIds) {
+		return productPersistence.findAll(productIds);
+	}
 }

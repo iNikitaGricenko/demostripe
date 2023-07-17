@@ -21,7 +21,7 @@ public class CustomerService implements ICustomerService {
 	@Override
 	@PerformanceMonitor
 	public Long addCustomer(Customer customer) {
-		String reference = stripeCustomerService.addCustomer(customer.getEmail()).getId();
+		String reference = stripeCustomerService.addCustomer(customer).getId();
 		customer.setStripeReference(reference);
 		customer.setRegisterDate(LocalDateTime.now());
 		return customerPersistence.save(customer);

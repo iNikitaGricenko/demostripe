@@ -2,6 +2,7 @@ package com.inikitagricenko.demo.stripe.handler;
 
 import com.inikitagricenko.demo.stripe.handler.error.ErrorBody;
 import com.inikitagricenko.demo.stripe.handler.error.ValidationErrorBody;
+import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
@@ -29,7 +30,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleConflict(RuntimeException ex) {
-        return new ResponseEntity<>("Error", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Exception occurs", FORBIDDEN);
     }
 
     @Override
@@ -44,6 +45,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<Object> handleViolationAccess(ValidationException exception, WebRequest request) {
+        return handleException(exception, request, FORBIDDEN);
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<Object> handleInvalidRequest(InvalidRequestException exception, WebRequest request) {
         return handleException(exception, request, FORBIDDEN);
     }
 
