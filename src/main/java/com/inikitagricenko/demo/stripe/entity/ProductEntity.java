@@ -11,7 +11,7 @@ import org.hibernate.Hibernate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
+@Entity(name = "product")
 @Getter
 @Setter
 @ToString

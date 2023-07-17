@@ -1,8 +1,10 @@
 package com.inikitagricenko.demo.stripe.entity;
 
+import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 @Data
+@Embeddable
 public class OrderItemEntity {
 
     private Long id;

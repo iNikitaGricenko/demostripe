@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
+@Entity(name = "customer_order")
 @ToString
 @Getter @Setter
 @RequiredArgsConstructor

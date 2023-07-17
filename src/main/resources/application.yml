@@ -1,6 +1,20 @@
 server:
   port: 8080
 
+#postgres
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  datasource:
+    username: root
+    password: password
+    url: jdbc:postgresql://localhost:5432/demostripe
+  main:
+    allow-bean-definition-overriding: true
+  flyway:
+    enabled: true
+
 STRIPE_PUBLIC_KEY: 'pk_test_51LGeMLL2yOchtppOk5ZZ6f3COER9NCp3whJhlb5lh2TkgNPAY5nF8g1BAZYUDwJ89Guu1jwWtKm7bulL1A7ED6Os00W82DIZpv'
 STRIPE_SECRET_KEY: 'sk_test_51LGeMLL2yOchtppOWyjA0YkNDeptLXGFRhwBuSTA6sUO4LikIDATzSyuiQPS6a3UIwGNlYANekWn5dO4mR7h4K8u00OB1KRyXg'
 

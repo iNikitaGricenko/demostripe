@@ -7,6 +7,7 @@ import com.inikitagricenko.demo.stripe.service.stripe.StripeCustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,6 +21,7 @@ public class CustomerService implements ICustomerService {
 	public Long addCustomer(Customer customer) {
 		String reference = stripeCustomerService.addCustomer(customer.getEmail()).getId();
 		customer.setStripeReference(reference);
+		customer.setRegisterDate(LocalDateTime.now());
 		return customerPersistence.save(customer);
 	}
 

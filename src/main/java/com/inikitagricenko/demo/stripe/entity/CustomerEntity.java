@@ -14,7 +14,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Entity
+@Entity(name = "customer")
 public class CustomerEntity {
 
     @Id

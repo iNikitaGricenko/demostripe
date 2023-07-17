@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,7 +16,10 @@ import java.util.Objects;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Entity
+@SQLDelete(sql = "UPDATE subscription e " +
+        "SET deleted=true, deleted_at=now() " +
+        "WHERE e.subscription_id=?")
+@Entity(name = "subscription")
 public class SubscriptionEntity {
 
 	@Id
@@ -55,6 +59,12 @@ public class SubscriptionEntity {
 
 	@Column(name = "status")
 	private String status;
+
+	@JoinColumn(name = "delete_at")
+	private LocalDateTime deleteAt;
+
+	@JoinColumn(name = "deleted")
+	private boolean deleted = false;
 
 	@Override
 	public boolean equals(Object o) {
