@@ -24,6 +24,8 @@ public interface CustomerOrderMapper {
 
     CustomerOrder toOrder(CustomerOrderEntity customerOrderEntity);
 
+    List<CustomerOrder> toOrders(List<CustomerOrderEntity> customerOrderEntity);
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     CustomerOrderEntity partialUpdate(CustomerOrder updater, @MappingTarget CustomerOrderEntity entity);
 }

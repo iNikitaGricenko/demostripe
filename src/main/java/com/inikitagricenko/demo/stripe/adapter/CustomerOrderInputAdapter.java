@@ -7,5 +7,7 @@ public interface CustomerOrderInputAdapter {
 
 	long pay(CustomerOrder customerOrder);
 
-	long updateStatus(Long id, OrderStatus status);
+	void confirmPay(Long orderId);
+
+	long updateDeliveryStatus(Long id, OrderStatus status);
 }

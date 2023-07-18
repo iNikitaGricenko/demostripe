@@ -21,6 +21,7 @@ public class StripeUtils {
 				.setCustomer(customer)
 				.setReceiptEmail(order.getCustomer().getEmail())
 				.setShipping(exctractShipping(order))
+				.setCapture(false)
 				.build();
 	}
 

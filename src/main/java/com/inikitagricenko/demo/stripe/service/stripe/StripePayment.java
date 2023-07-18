@@ -43,4 +43,15 @@ public class StripePayment implements PaymentAdapter {
 		}
 	}
 
+	@Override
+	public String confirm(String chargeReference) {
+		try {
+			Charge charge = Charge.retrieve(chargeReference);
+			charge.capture();
+			return charge.getId();
+		} catch (StripeException e) {
+			throw new DefaultBackendException(e);
+		}
+	}
+
 }

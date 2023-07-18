@@ -43,19 +43,25 @@ public class OrderRestController {
     @GetMapping("/analytics")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AnalyticsResponse.class)))
     public AnalyticsResponse getAnalytics(@ModelAttribute @Valid AnalyticsSearch analyticsSearchDTO) {
-        return null;
+        return customerOrderOutputAdapter.getAnalytics(analyticsSearchDTO);
     }
 
     @PostMapping
-    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerOrderResponseDTO.class)))
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Long.class)))
     public long payOrder(@Valid @RequestBody CustomerOrderRequestDTO requestDTO) {
         CustomerOrder order = customerOrderMapper.toOrder(requestDTO);
         return customerOrderInputAdapter.pay(order);
     }
 
-    @PutMapping("/status/{id}")
-    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerOrderResponseDTO.class)))
-    public long updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
-        return customerOrderInputAdapter.updateStatus(id, status);
+    @PostMapping("/{id}")
+    @ApiResponse(responseCode = "200")
+    public void confirmPay(@PathVariable Long id) {
+        customerOrderInputAdapter.confirmPay(id);
+    }
+
+    @PutMapping("/delivery/{id}")
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Long.class)))
+    public long updateOrderDeliveryStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
+        return customerOrderInputAdapter.updateDeliveryStatus(id, status);
     }
 }

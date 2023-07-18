@@ -48,4 +48,8 @@ public class CustomerOrder {
     private Set<OrderItem> orderItems;
 
     private Payment payment;
+
+    public boolean isFinalDeal() {
+        return OrderStatus.DELIVERED.equals(this.status) || OrderStatus.RETURNED.equals(this.status);
+    }
 }

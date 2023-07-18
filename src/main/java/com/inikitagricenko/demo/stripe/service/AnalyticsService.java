@@ -20,10 +20,7 @@ public class AnalyticsService implements IAnalyticsService {
 
 	@Override
 	@PerformanceMonitor
-	public AnalyticsResponse getAnalytic(List<CustomerOrder> customerOrders) {
-		List<OrderItem> orderItems = new ArrayList<>();
-		customerOrders.stream().map(CustomerOrder::getOrderItems).forEach(orderItems::addAll);
-
+	public AnalyticsResponse getAnalytic(List<OrderItem> orderItems) {
 		long totalOrderQuantity = orderItemService.getTotalOrderQuantity(orderItems);
 		double totalOrderPrice = orderItemService.getTotalOrderPrice(orderItems);
 		double maxPriceForItem = orderItemService.getMaxPriceForItem(orderItems);

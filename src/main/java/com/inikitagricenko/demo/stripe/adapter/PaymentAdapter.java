@@ -6,4 +6,5 @@ public interface PaymentAdapter {
 
 	String pay(CustomerOrder order);
 
+	String confirm(String charge);
 }
