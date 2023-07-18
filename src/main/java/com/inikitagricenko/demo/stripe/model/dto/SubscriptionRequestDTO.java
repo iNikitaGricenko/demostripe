@@ -33,6 +33,7 @@ public class SubscriptionRequestDTO implements Serializable {
 	@NotNull(message = "discount should not be null")
 	Long discount;
 
+	@NotEmpty
 	@NotNull(message = "products should not be null")
 	@JsonProperty("products")
 	List<ProductRequestDTO> productList;

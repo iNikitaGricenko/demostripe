@@ -42,7 +42,7 @@ public class ProductController {
 
 	@PostMapping
 	@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ProductRequestDTO.class)))
-	public long addOrder(@Valid @RequestBody ProductRequestDTO requestDTO) {
+	public long addProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
 		Product product = productMapper.toProduct(requestDTO);
 		return productInputAdapter.add(product);
 	}

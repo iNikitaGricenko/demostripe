@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.config;
 
+import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -52,7 +53,13 @@ public class AopConfiguration {
 		String methodName = methodSignature.getName();
 
 		//Log method that throw exception
-		log.error("{} method {} exception occurs", className, methodName, exception);
+		if (exception instanceof DefaultBackendException) {
+			Throwable cause = exception.getCause();
+			log.error("{} method {} exception occurs", className, methodName, cause);
+		} else {
+			log.error("{} method {} exception occurs", className, methodName, exception);
+		}
+
 	}
 
 	@Around("performanceMonitor()")
