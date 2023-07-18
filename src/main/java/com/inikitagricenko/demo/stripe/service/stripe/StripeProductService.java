@@ -6,10 +6,12 @@ import com.stripe.model.Product;
 import com.stripe.param.ProductCreateParams;
 import com.stripe.param.ProductListParams;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StripeProductService {
@@ -26,6 +28,7 @@ public class StripeProductService {
 
 			return Product.create(productCreateParams).getId();
 		} catch (StripeException e) {
+			log.error("Product on add error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -34,6 +37,7 @@ public class StripeProductService {
 		try {
 			return Product.retrieve(productId);
 		} catch (StripeException e) {
+			log.error("Product on retrieve error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -46,6 +50,7 @@ public class StripeProductService {
 
 			return Product.list(productListParams).getData();
 		} catch (StripeException e) {
+			log.error("Product on retrieve all error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

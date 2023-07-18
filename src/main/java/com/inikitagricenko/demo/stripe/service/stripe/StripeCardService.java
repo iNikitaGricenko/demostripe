@@ -6,8 +6,10 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.param.PaymentSourceCollectionCreateParams;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StripeCardService {
@@ -19,6 +21,7 @@ public class StripeCardService {
 					.build();
 			return customer.getSources().create(paymentSourceCollectionCreateParams).getId();
 		} catch (StripeException e) {
+			log.error("Card on creation error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

@@ -9,10 +9,12 @@ import com.inikitagricenko.demo.stripe.utils.StripeUtils;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StripePayment implements PaymentAdapter {
@@ -37,6 +39,7 @@ public class StripePayment implements PaymentAdapter {
 
 			return Charge.create(stripeUtils.exctractChargeCreateParams(order, customerReference)).getId();
 		} catch (StripeException e) {
+			log.error("Payment on pay error occurs ", e);
 			String email = order.getCustomer().getEmail();
 			// TODO send failed email to user
 			throw new DefaultBackendException(e);
@@ -50,6 +53,7 @@ public class StripePayment implements PaymentAdapter {
 			charge.capture();
 			return charge.getId();
 		} catch (StripeException e) {
+			log.error("Payment on confirm error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

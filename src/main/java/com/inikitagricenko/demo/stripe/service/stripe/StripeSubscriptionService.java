@@ -11,10 +11,12 @@ import com.stripe.param.SubscriptionCreateParams;
 import com.stripe.param.SubscriptionItemCreateParams;
 import com.stripe.param.SubscriptionListParams;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StripeSubscriptionService {
@@ -30,8 +32,10 @@ public class StripeSubscriptionService {
 
 			return Subscription.create(subscriptionCreateParams);
 		} catch (InvalidRequestException exception) {
+			log.error("Subscription invalid request", exception);
 			throw new DefaultBackendException(exception);
 		} catch (StripeException e) {
+			log.error("Subscription on subscribe error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -42,6 +46,7 @@ public class StripeSubscriptionService {
 
 			subscription.cancel();
 		} catch (StripeException e) {
+			log.error("Subscription on cancel error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -52,6 +57,7 @@ public class StripeSubscriptionService {
 
 			return subscription.resume().getId();
 		} catch (StripeException e) {
+			log.error("Subscription on resume error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -65,6 +71,7 @@ public class StripeSubscriptionService {
 			SubscriptionCollection subscriptions = Subscription.list(subscriptionListParams);
 			return subscriptions.getData();
 		} catch (StripeException e) {
+			log.error("Subscription on retrieve all error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -73,6 +80,7 @@ public class StripeSubscriptionService {
 		try {
 			return Subscription.retrieve(subscriptionId);
 		} catch (StripeException e) {
+			log.error("Subscription on retrieve error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -87,6 +95,7 @@ public class StripeSubscriptionService {
 
 			SubscriptionItem.create(subscriptionItemCreateParams);
 		} catch (StripeException e) {
+			log.error("Subscription on item add error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

@@ -9,6 +9,7 @@ import com.stripe.param.CustomerListParams;
 import com.stripe.param.CustomerRetrieveParams;
 import com.stripe.param.PaymentSourceCollectionCreateParams;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StripeCustomerService {
@@ -38,6 +40,7 @@ public class StripeCustomerService {
 
 			return created;
 		} catch (StripeException e) {
+			log.error("Customer on create error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -46,6 +49,7 @@ public class StripeCustomerService {
 		try {
 			retrieve(customerId).delete();
 		} catch (StripeException e) {
+			log.error("Customer on delete error occurs ", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -62,6 +66,7 @@ public class StripeCustomerService {
 
 			return new PageImpl<>(data, pageable, data.size());
 		} catch (StripeException e) {
+			log.error("Customer on retrieve all error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -70,14 +75,20 @@ public class StripeCustomerService {
 		try {
 			return Optional.ofNullable(Customer.retrieve(customerId)).orElseThrow(RuntimeException::new);
 		} catch (StripeException e) {
+			log.error("Customer on retrieve error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
 
-	public Customer retrieveWithSources(String customer) throws StripeException {
-		CustomerRetrieveParams customerRetrieveParams = CustomerRetrieveParams.builder()
-				.addExpand("sources")
-				.build();
-		return Customer.retrieve(customer, customerRetrieveParams, null);
+	public Customer retrieveWithSources(String customer) {
+		try {
+			CustomerRetrieveParams customerRetrieveParams = CustomerRetrieveParams.builder()
+					.addExpand("sources")
+					.build();
+			return Customer.retrieve(customer, customerRetrieveParams, null);
+		} catch (StripeException e) {
+			log.error("Customer on retrieve with resource error occurs ", e);
+			throw new DefaultBackendException(e);
+		}
 	}
 }

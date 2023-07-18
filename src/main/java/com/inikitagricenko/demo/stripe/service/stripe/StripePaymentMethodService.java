@@ -8,6 +8,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentMethod;
 import com.stripe.param.PaymentMethodAttachParams;
 import com.stripe.param.PaymentMethodCreateParams;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static com.stripe.param.PaymentMethodCreateParams.*;
 
+@Slf4j
 @Service
 public class StripePaymentMethodService {
 
@@ -38,6 +40,7 @@ public class StripePaymentMethodService {
 						.build();
 				return paymentMethod.attach(paymentMethodAttachParams);
 			} catch (StripeException e) {
+				log.error("PaymentMethod on create error occurs ", e);
 				throw new DefaultBackendException(e);
 			}
 		});
