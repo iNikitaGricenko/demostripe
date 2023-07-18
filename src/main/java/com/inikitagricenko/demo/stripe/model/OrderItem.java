@@ -13,6 +13,8 @@ public class OrderItem {
 
     private Long id;
 
+    private Long productId;
+
     private String stripeReference;
 
     private String name;
@@ -21,5 +23,5 @@ public class OrderItem {
 
     private long quantity;
 
-    private long unitPrice;
+    private float unitPrice;
 }

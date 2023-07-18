@@ -9,6 +9,8 @@ import java.io.Serializable;
 
 @Data
 public class CustomerRequestDTO implements Serializable {
+    Long id;
+
     @NotNull
     @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$")
     @Schema(example = "email@domain.com")

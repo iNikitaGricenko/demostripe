@@ -2,6 +2,7 @@ package com.inikitagricenko.demo.stripe.model;
 
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
+import com.inikitagricenko.demo.stripe.model.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,9 @@ public class CustomerOrder {
 
     private Long id;
 
-    private String paymentMethod;
+    private String stripeReference;
+
+    private PaymentMethod paymentMethod;
 
     private Currency paymentCurrency = Currency.EUR;
 
@@ -43,4 +46,6 @@ public class CustomerOrder {
     private Customer customer;
 
     private Set<OrderItem> orderItems;
+
+    private Payment payment;
 }

@@ -16,6 +16,8 @@ import java.io.Serializable;
 @Value
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductRequestDTO implements Serializable {
+	Long id;
+
 	@NotNull(message = "Name should not be null")
 	@NotEmpty(message = "Name should not be empty")
 	@NotBlank(message = "Name should not be blank")
@@ -27,7 +29,7 @@ public class ProductRequestDTO implements Serializable {
 	@NotNull(message = "Price must not be null")
 	@Min(value = 9, message = "Price should not be less than 9")
 	@Positive(message = "Price should be positive")
-	Long price;
+	float price;
 
 	@NotNull(message = "Quantity should not be null")
 	@Min(value = 1, message = "Quantity min value is 0")

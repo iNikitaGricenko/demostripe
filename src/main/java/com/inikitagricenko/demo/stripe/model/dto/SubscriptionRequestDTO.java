@@ -18,6 +18,8 @@ import java.util.List;
  */
 @Value
 public class SubscriptionRequestDTO implements Serializable {
+	Long id;
+
 	@NotNull(message = "name should not be null")
 	@NotEmpty
 	String name;
@@ -33,7 +35,7 @@ public class SubscriptionRequestDTO implements Serializable {
 
 	@NotNull(message = "products should not be null")
 	@JsonProperty("products")
-	List<Product> productList;
+	List<ProductRequestDTO> productList;
 
 	@NotNull(message = "customer should not be null")
 	Customer customer;

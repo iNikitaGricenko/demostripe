@@ -41,4 +41,10 @@ public class CustomerPersistence {
 	public void delete(long id) {
 		customerRepository.deleteById(id);
 	}
+
+	public Customer findByEmail(String email) {
+		return customerRepository.findByEmail(email)
+				.map(customerMapper::toCustomer)
+				.orElseThrow(EntityNotFoundException::new);
+	}
 }

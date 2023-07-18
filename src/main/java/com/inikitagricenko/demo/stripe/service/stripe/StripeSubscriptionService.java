@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.service.stripe;
 
+import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
 import com.inikitagricenko.demo.stripe.model.Product;
 import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
@@ -29,9 +30,9 @@ public class StripeSubscriptionService {
 
 			return Subscription.create(subscriptionCreateParams);
 		} catch (InvalidRequestException exception) {
-			throw new RuntimeException("Exception occurs", exception); // TODO throw backend exception here
+			throw new DefaultBackendException(exception);
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -41,7 +42,7 @@ public class StripeSubscriptionService {
 
 			subscription.cancel();
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -51,7 +52,7 @@ public class StripeSubscriptionService {
 
 			return subscription.resume().getId();
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -64,7 +65,7 @@ public class StripeSubscriptionService {
 			SubscriptionCollection subscriptions = Subscription.list(subscriptionListParams);
 			return subscriptions.getData();
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -72,7 +73,7 @@ public class StripeSubscriptionService {
 		try {
 			return Subscription.retrieve(subscriptionId);
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -86,7 +87,7 @@ public class StripeSubscriptionService {
 
 			SubscriptionItem.create(subscriptionItemCreateParams);
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 

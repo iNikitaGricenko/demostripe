@@ -47,4 +47,10 @@ public class CustomerService implements ICustomerService {
 		return customerPersistence.findById(customerId);
 	}
 
+	@Override
+	@PerformanceMonitor
+	public Customer retrieve(String email) {
+		return customerPersistence.findByEmail(email);
+	}
+
 }

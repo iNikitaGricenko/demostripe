@@ -1,6 +1,8 @@
 package com.inikitagricenko.demo.stripe.handler;
 
+import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
 import com.inikitagricenko.demo.stripe.handler.error.ErrorBody;
+import com.inikitagricenko.demo.stripe.handler.error.InvalidPaymentMethod;
 import com.inikitagricenko.demo.stripe.handler.error.ValidationErrorBody;
 import com.stripe.exception.InvalidRequestException;
 import com.stripe.exception.StripeException;
@@ -30,7 +32,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleConflict(RuntimeException ex) {
-        return new ResponseEntity<>("Exception occurs", FORBIDDEN);
+        return new ResponseEntity<>("Something went wrong", FORBIDDEN);
     }
 
     @Override
@@ -55,8 +57,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException exception, WebRequest request) {
-        EntityNotFoundException notFoundException = new EntityNotFoundException("Not found", exception);
-        return handleException(notFoundException, request, BAD_REQUEST);
+        return handleException(exception, request, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidPaymentMethod.class)
+    public ResponseEntity<Object> handleInvalidPaymentMethod(InvalidPaymentMethod exception, WebRequest request) {
+        return handleException(exception, request, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DefaultBackendException.class)
+    public ResponseEntity<Object> handleDefaultBackendException(DefaultBackendException exception, WebRequest request) {
+        return handleException(exception, request, FORBIDDEN);
     }
 
     @ExceptionHandler(StripeException.class)

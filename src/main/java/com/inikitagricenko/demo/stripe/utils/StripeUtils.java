@@ -13,14 +13,14 @@ public class StripeUtils {
 
 	private final IOderItemService oderItemService;
 
-	public ChargeCreateParams exctractChargeCreateParams(CustomerOrder order, String token) {
+	public ChargeCreateParams exctractChargeCreateParams(CustomerOrder order, String customer) {
 		return ChargeCreateParams.builder()
 				.setAmount((long) oderItemService.getTotalOrderPrice(order.getOrderItems()))
 				.setCurrency(order.getPaymentCurrency().getAbbreviation())
 				.setDescription(order.getDescription())
+				.setCustomer(customer)
 				.setReceiptEmail(order.getCustomer().getEmail())
 				.setShipping(exctractShipping(order))
-				.setSource(token)
 				.build();
 	}
 

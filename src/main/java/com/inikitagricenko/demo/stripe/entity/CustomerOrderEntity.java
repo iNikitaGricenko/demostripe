@@ -2,6 +2,7 @@ package com.inikitagricenko.demo.stripe.entity;
 
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
+import com.inikitagricenko.demo.stripe.model.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,12 @@ public class CustomerOrderEntity {
     @Column(name = "customer_order_id")
     private Long id;
 
+    @Column(name = "stripe_reference")
+    private String stripeReference;
+
+    @Enumerated
     @Column(name = "payment_method")
-    private String paymentMethod;
+    private PaymentMethod paymentMethod;
 
     @Enumerated
     @Column(name = "payment_currency")
@@ -66,7 +71,7 @@ public class CustomerOrderEntity {
 
     @ManyToOne(
             targetEntity = CustomerEntity.class,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            cascade = {CascadeType.MERGE},
             fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     @ToString.Exclude

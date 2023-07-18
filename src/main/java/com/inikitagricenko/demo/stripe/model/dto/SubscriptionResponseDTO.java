@@ -25,6 +25,6 @@ public class SubscriptionResponseDTO implements Serializable {
 	Customer customer;
 	String description;
 	Long discount;
-	List<Product> productList;
+	List<ProductResponseDTO> productList;
 	String status;
 }

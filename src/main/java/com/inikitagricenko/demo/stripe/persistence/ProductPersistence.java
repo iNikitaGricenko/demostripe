@@ -7,6 +7,7 @@ import com.inikitagricenko.demo.stripe.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -38,5 +39,20 @@ public class ProductPersistence {
 
 	public List<Product> findAll(List<Long> ids) {
 		return productMapper.toProduct(productRepository.findAllById(ids));
+	}
+
+	@Transactional
+	public boolean exists(List<Long> ids) {
+		return productRepository.existsByIdIn(ids);
+	}
+
+	@Transactional
+	public void reduceQuantity(long id, long quantity) {
+		productRepository.reduceQuantity(id, quantity);
+	}
+
+	@Transactional
+	public void increaseQuantity(long id, long quantity) {
+		productRepository.increaseQuantity(id, quantity);
 	}
 }

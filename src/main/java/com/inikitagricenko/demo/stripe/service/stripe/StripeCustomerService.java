@@ -1,11 +1,14 @@
 package com.inikitagricenko.demo.stripe.service.stripe;
 
+import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
+import com.inikitagricenko.demo.stripe.model.enums.PaymentMethod;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerListParams;
 import com.stripe.param.CustomerRetrieveParams;
 import com.stripe.param.PaymentSourceCollectionCreateParams;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +20,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StripeCustomerService {
 
-	public static final String MASTERCARD_SOURCE = "tok_mastercard";
-	public static final String VISA_SOURCE = "tok_visa";
+	private final StripeCardService stripeCardService;
 
 	public Customer addCustomer(com.inikitagricenko.demo.stripe.model.Customer customer) {
 		try {
@@ -31,11 +34,11 @@ public class StripeCustomerService {
 					.build();
 			Customer created = Customer.create(customerCreateParams);
 
-			addMasterCardSource(retrieveWithSources(created.getId()));
+			stripeCardService.addCustomerCard(retrieveWithSources(created.getId()), PaymentMethod.MASTERCARD);
 
 			return created;
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -59,7 +62,7 @@ public class StripeCustomerService {
 
 			return new PageImpl<>(data, pageable, data.size());
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -67,7 +70,7 @@ public class StripeCustomerService {
 		try {
 			return Optional.ofNullable(Customer.retrieve(customerId)).orElseThrow(RuntimeException::new);
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -76,21 +79,5 @@ public class StripeCustomerService {
 				.addExpand("sources")
 				.build();
 		return Customer.retrieve(customer, customerRetrieveParams, null);
-	}
-
-	@Async
-	public void addMasterCardSource(Customer customer) throws StripeException {
-		PaymentSourceCollectionCreateParams paymentSourceCollectionCreateParams = PaymentSourceCollectionCreateParams.builder()
-				.setSource(MASTERCARD_SOURCE)
-				.build();
-		customer.getSources().create(paymentSourceCollectionCreateParams);
-	}
-
-	@Async
-	public void addVisaSource(Customer customer) throws StripeException {
-		PaymentSourceCollectionCreateParams paymentSourceCollectionCreateParams = PaymentSourceCollectionCreateParams.builder()
-				.setSource(VISA_SOURCE)
-				.build();
-		customer.getSources().create(paymentSourceCollectionCreateParams);
 	}
 }

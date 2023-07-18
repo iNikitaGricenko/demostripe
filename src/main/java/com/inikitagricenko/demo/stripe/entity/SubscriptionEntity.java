@@ -55,7 +55,7 @@ public class SubscriptionEntity {
 
 	@ManyToMany
 	@JoinColumn(name = "product_id")
-	private List<ProductEntity> itemList = new ArrayList<>();
+	private List<ProductEntity> productList = new ArrayList<>();
 
 	@Column(name = "status")
 	private String status;

@@ -9,11 +9,13 @@ public class OrderItemEntity {
 
     private Long id;
 
+    private Long productId;
+
     private String name;
 
     private String model;
 
     private long quantity;
 
-    private long unitPrice;
+    private float unitPrice;
 }

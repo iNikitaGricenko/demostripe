@@ -1,6 +1,9 @@
 package com.inikitagricenko.demo.stripe.model.dto;
 
+import com.inikitagricenko.demo.stripe.model.Payment;
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
+import com.inikitagricenko.demo.stripe.model.enums.PaymentMethod;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -17,7 +20,7 @@ public class CustomerOrderRequestDTO implements Serializable {
     private final String description;
 
     @NotNull
-    private final String paymentMethod;
+    private final PaymentMethod paymentMethod;
 
     @NotNull
     private final Currency paymentCurrency;
@@ -34,9 +37,15 @@ public class CustomerOrderRequestDTO implements Serializable {
     @NotNull
     private final String zipCode;
 
+    @Valid
     @NotNull
     private final CustomerRequestDTO customer;
 
+    @Valid
     @NotNull
     private final Set<OrderItemRequestDTO> orderItems;
+
+    @Valid
+    @NotNull
+    private final Payment payment;
 }

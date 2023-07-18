@@ -14,7 +14,7 @@ public class Product {
 
 	private String description;
 
-	private Long price;
+	private float price;
 
 	private Long quantity;
 

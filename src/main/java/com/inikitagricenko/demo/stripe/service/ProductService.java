@@ -41,6 +41,23 @@ public class ProductService implements IProductService {
 
 	@Override
 	@PerformanceMonitor
+	public void reduceQuantity(long productId, long quantity) {
+		productPersistence.reduceQuantity(productId, quantity);
+	}
+
+	@Override
+	@PerformanceMonitor
+	public void increaseQuantity(long productId, long quantity) {
+		productPersistence.increaseQuantity(productId, quantity);
+	}
+
+	@Override
+	public boolean exists(List<Long> productIds) {
+		return productPersistence.exists(productIds);
+	}
+
+	@Override
+	@PerformanceMonitor
 	public List<Product> retrieveAll() {
 		return productPersistence.findAll();
 	}

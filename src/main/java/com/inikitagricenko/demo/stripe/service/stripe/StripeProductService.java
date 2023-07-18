@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.service.stripe;
 
+import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Product;
 import com.stripe.param.ProductCreateParams;
@@ -25,7 +26,7 @@ public class StripeProductService {
 
 			return Product.create(productCreateParams).getId();
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -33,7 +34,7 @@ public class StripeProductService {
 		try {
 			return Product.retrieve(productId);
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -45,7 +46,7 @@ public class StripeProductService {
 
 			return Product.list(productListParams).getData();
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
@@ -53,7 +54,7 @@ public class StripeProductService {
 		try {
 			Product.retrieve(productId).delete();
 		} catch (StripeException e) {
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 

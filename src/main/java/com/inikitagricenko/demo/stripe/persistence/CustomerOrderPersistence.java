@@ -24,7 +24,7 @@ public class CustomerOrderPersistence {
 
 	public CustomerOrder findById(long id) {
 		return customerRepository.findById(id)
-				.map(customerMapper::toCustomerOrder)
+				.map(customerMapper::toOrder)
 				.orElseThrow(EntityNotFoundException::new);
 	}
 
@@ -35,7 +35,7 @@ public class CustomerOrderPersistence {
 	}
 
 	public List<CustomerOrder> findAll() {
-		return customerRepository.findAll().stream().map(customerMapper::toCustomerOrder).toList();
+		return customerRepository.findAll().stream().map(customerMapper::toOrder).toList();
 	}
 
 	public void delete(long id) {

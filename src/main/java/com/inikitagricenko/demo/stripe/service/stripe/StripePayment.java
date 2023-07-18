@@ -1,7 +1,9 @@
 package com.inikitagricenko.demo.stripe.service.stripe;
 
 import com.inikitagricenko.demo.stripe.adapter.PaymentAdapter;
+import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
 import com.inikitagricenko.demo.stripe.model.CustomerOrder;
+import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
 import com.inikitagricenko.demo.stripe.utils.StripeUtils;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
@@ -13,15 +15,25 @@ import org.springframework.stereotype.Service;
 public class StripePayment implements PaymentAdapter {
 
 	private final StripeUtils stripeUtils;
+	private final StripePaymentMethodService stripePaymentMethodService;
+	private final ICustomerService customerService;
+	private final StripeCustomerService stripeCustomerService;
+	private final StripeCardService stripeCardService;
 
 	@Override
-	public String payment(CustomerOrder order, String token) {
+	public String pay(CustomerOrder order) {
 		try {
-			return Charge.create(stripeUtils.exctractChargeCreateParams(order, token)).getId();
+			String customerReference = customerService.retrieve(order.getCustomer().getEmail()).getStripeReference();
+
+			stripePaymentMethodService.create(order, customerReference);
+
+			stripeCardService.addCustomerCard(stripeCustomerService.retrieveWithSources(customerReference), order.getPaymentMethod());
+
+			return Charge.create(stripeUtils.exctractChargeCreateParams(order, customerReference)).getId();
 		} catch (StripeException e) {
 			String email = order.getCustomer().getEmail();
 			// TODO send failed email to user
-			throw new RuntimeException(e);
+			throw new DefaultBackendException(e);
 		}
 	}
 
