@@ -21,7 +21,6 @@ public class StripeCardService {
 					.build();
 			return customer.getSources().create(paymentSourceCollectionCreateParams).getId();
 		} catch (StripeException e) {
-			log.error("Card on creation error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

@@ -40,7 +40,6 @@ public class StripeCustomerService {
 
 			return created;
 		} catch (StripeException e) {
-			log.error("Customer on create error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -49,7 +48,6 @@ public class StripeCustomerService {
 		try {
 			retrieve(customerId).delete();
 		} catch (StripeException e) {
-			log.error("Customer on delete error occurs ", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -66,7 +64,6 @@ public class StripeCustomerService {
 
 			return new PageImpl<>(data, pageable, data.size());
 		} catch (StripeException e) {
-			log.error("Customer on retrieve all error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -87,7 +84,6 @@ public class StripeCustomerService {
 					.build();
 			return Customer.retrieve(customer, customerRetrieveParams, null);
 		} catch (StripeException e) {
-			log.error("Customer on retrieve with resource error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

@@ -39,7 +39,6 @@ public class StripePayment implements PaymentAdapter {
 
 			return Charge.create(stripeUtils.exctractChargeCreateParams(order, customerReference)).getId();
 		} catch (StripeException e) {
-			log.error("Payment on pay error occurs ", e);
 			String email = order.getCustomer().getEmail();
 			// TODO send failed email to user
 			throw new DefaultBackendException(e);
@@ -53,7 +52,6 @@ public class StripePayment implements PaymentAdapter {
 			charge.capture();
 			return charge.getId();
 		} catch (StripeException e) {
-			log.error("Payment on confirm error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

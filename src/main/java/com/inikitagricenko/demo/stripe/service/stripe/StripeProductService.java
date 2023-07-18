@@ -28,7 +28,6 @@ public class StripeProductService {
 
 			return Product.create(productCreateParams).getId();
 		} catch (StripeException e) {
-			log.error("Product on add error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -37,7 +36,6 @@ public class StripeProductService {
 		try {
 			return Product.retrieve(productId);
 		} catch (StripeException e) {
-			log.error("Product on retrieve error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}
@@ -50,7 +48,6 @@ public class StripeProductService {
 
 			return Product.list(productListParams).getData();
 		} catch (StripeException e) {
-			log.error("Product on retrieve all error occurs ", e);
 			throw new DefaultBackendException(e);
 		}
 	}

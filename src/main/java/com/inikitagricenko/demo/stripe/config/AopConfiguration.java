@@ -21,10 +21,15 @@ import org.springframework.util.StopWatch;
 @Aspect
 @Configuration
 @EnableAspectJAutoProxy
-public class PerformanceMonitorConfiguration {
+public class AopConfiguration {
 
 	@Pointcut("@annotation(com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor)")
-	public void monitor() { }
+	public void performanceMonitor() { }
+
+	@Pointcut("execution(public * com.inikitagricenko.demo.stripe.service..*(..)) || " +
+			"execution(public * com.inikitagricenko.demo.stripe.persistence..*(..)) || " +
+			"execution(public * com.inikitagricenko.demo.stripe.utils..*(..))")
+	public void callAtAllPublicServices() { }
 
 	@Bean
 	public PerformanceMonitorInterceptor performanceMonitorInterceptor() {
@@ -34,16 +39,23 @@ public class PerformanceMonitorConfiguration {
 	@Bean
 	public Advisor performanceMonitorAdvisor() {
 		AspectJExpressionPointcut pointcut = new AspectJExpressionPointcut();
-		pointcut.setExpression("com.inikitagricenko.demo.stripe.config.PerformanceMonitorConfiguration.monitor()");
+		pointcut.setExpression("com.inikitagricenko.demo.stripe.config.AopConfiguration.performanceMonitor()");
 		return new DefaultPointcutAdvisor(pointcut, performanceMonitorInterceptor());
 	}
 
-	@AfterThrowing("@annotation(com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor))")
-	public void AfterThrowing(JoinPoint joinPoint) {
-		log.info("{}.{} Throws exception", joinPoint.getTarget().getClass().getSimpleName(), joinPoint.getSignature().getName());
+	@AfterThrowing(value = "callAtAllPublicServices()", throwing = "exception")
+	public void logOnServiceThrow(JoinPoint joinPoint, Exception exception) {
+		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
+
+		//Get intercepted method details
+		String className = methodSignature.getDeclaringType().getSimpleName();
+		String methodName = methodSignature.getName();
+
+		//Log method that throw exception
+		log.error("{} method {} exception occurs", className, methodName, exception);
 	}
 
-	@Around("@annotation(com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor)")
+	@Around("performanceMonitor()")
 	public Object profileAllMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
@@ -52,16 +64,15 @@ public class PerformanceMonitorConfiguration {
 		String methodName = methodSignature.getName();
 
 		final StopWatch stopWatch = new StopWatch();
-
 		//Measure method execution time
-		stopWatch.start();
-		Object result = proceedingJoinPoint.proceed();
-		stopWatch.stop();
-
-		//Log method execution time
-		log.info("{}.{} Execution time :: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
-
-		return result;
+		try {
+			stopWatch.start();
+			return proceedingJoinPoint.proceed();
+		} finally {
+			stopWatch.stop();
+			//Log method execution time
+			log.info("{}.{} Execution time :: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
+		}
 	}
 
 }

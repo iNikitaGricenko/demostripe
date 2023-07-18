@@ -44,7 +44,9 @@ public class CustomerService implements ICustomerService {
 	@Override
 	@PerformanceMonitor
 	public Customer retrieve(Long customerId) {
-		return customerPersistence.findById(customerId);
+		Customer customer = customerPersistence.findById(customerId);
+		stripeCustomerService.retrieve(customer.getStripeReference());
+		return customer;
 	}
 
 	@Override
