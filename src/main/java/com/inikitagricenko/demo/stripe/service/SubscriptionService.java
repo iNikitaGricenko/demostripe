@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.service;
 
+import com.inikitagricenko.demo.stripe.config.annotations.ProductValidation;
 import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
 import com.inikitagricenko.demo.stripe.model.Product;
 import com.inikitagricenko.demo.stripe.model.Subscription;
@@ -25,6 +26,7 @@ public class SubscriptionService implements ISubscriptionService {
 
 	@Override
 	@PerformanceMonitor
+	@ProductValidation
 	public Long add(Subscription subscription) {
 		String customerReference = customerService.retrieve(subscription.getCustomer().getId()).getStripeReference();
 		List<Product> products = productService.retrieveAll(subscription.getProductList().stream().map(Product::getId).toList());
