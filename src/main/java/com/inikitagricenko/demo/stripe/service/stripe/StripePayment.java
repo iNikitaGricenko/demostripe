@@ -2,6 +2,7 @@ package com.inikitagricenko.demo.stripe.service.stripe;
 
 import com.inikitagricenko.demo.stripe.adapter.PaymentAdapter;
 import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
+import com.inikitagricenko.demo.stripe.model.Customer;
 import com.inikitagricenko.demo.stripe.model.CustomerOrder;
 import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
 import com.inikitagricenko.demo.stripe.utils.StripeUtils;
@@ -9,6 +10,8 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Charge;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,10 @@ public class StripePayment implements PaymentAdapter {
 	@Override
 	public String pay(CustomerOrder order) {
 		try {
-			String customerReference = customerService.retrieve(order.getCustomer().getEmail()).getStripeReference();
+			String customerReference = Optional.ofNullable(order.getCustomer().getId())
+					.map(customerService::retrieve)
+					.map(Customer::getStripeReference)
+					.orElse(customerService.retrieve(order.getCustomer().getEmail()).getStripeReference());
 
 			stripePaymentMethodService.create(order, customerReference);
 
