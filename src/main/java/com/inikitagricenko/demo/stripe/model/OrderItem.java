@@ -13,13 +13,15 @@ public class OrderItem {
 
     private Long id;
 
+    private Long productId;
+
+    private String stripeReference;
+
     private String name;
 
     private String model;
 
     private long quantity;
 
-    private long unitPrice;
-
-    private String className;
+    private float unitPrice;
 }

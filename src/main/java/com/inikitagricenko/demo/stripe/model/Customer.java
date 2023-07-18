@@ -1,17 +1,15 @@
 package com.inikitagricenko.demo.stripe.model;
 
-import lombok.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 public class Customer {
 
-    @EqualsAndHashCode.Exclude
     private Long id;
+
+    private String stripeReference;
 
     private String firstName;
 
@@ -21,6 +19,5 @@ public class Customer {
 
     private String email;
 
-    @EqualsAndHashCode.Exclude
-    private LocalDateTime registerDate = LocalDateTime.now();
+    private LocalDateTime registerDate;
 }

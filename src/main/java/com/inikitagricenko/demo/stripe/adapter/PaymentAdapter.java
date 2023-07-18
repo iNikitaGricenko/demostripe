@@ -4,6 +4,7 @@ import com.inikitagricenko.demo.stripe.model.CustomerOrder;
 
 public interface PaymentAdapter {
 
-	String payment(CustomerOrder order, String token);
+	String pay(CustomerOrder order);
 
+	String confirm(String charge);
 }

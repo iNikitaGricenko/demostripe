@@ -2,6 +2,7 @@ package com.inikitagricenko.demo.stripe.model.dto;
 
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
+import com.inikitagricenko.demo.stripe.model.enums.PaymentMethod;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -20,8 +21,8 @@ public class CustomerOrderResponseDTO implements Serializable {
     @Schema(example = "my descriptio")
     private final String description;
 
-    @Schema(example = "Private24")
-    private final String paymentMethod;
+    @Schema(example = "MASTERCARD")
+    private final PaymentMethod paymentMethod;
 
     @Schema(example = "EUR")
     private final Currency paymentCurrency;

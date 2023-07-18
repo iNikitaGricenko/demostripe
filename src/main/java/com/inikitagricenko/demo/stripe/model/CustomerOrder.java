@@ -2,22 +2,26 @@ package com.inikitagricenko.demo.stripe.model;
 
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
-import lombok.*;
+import com.inikitagricenko.demo.stripe.model.enums.PaymentMethod;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Builder
 @Data
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class CustomerOrder {
 
-    @EqualsAndHashCode.Exclude
     private Long id;
 
-    private String paymentMethod;
+    private String stripeReference;
+
+    private PaymentMethod paymentMethod;
 
     private Currency paymentCurrency = Currency.EUR;
 
@@ -33,20 +37,19 @@ public class CustomerOrder {
 
     private String description;
 
-    @Builder.Default
-    @EqualsAndHashCode.Exclude
-    private LocalDateTime created = LocalDateTime.now();
+    private LocalDateTime created;
 
-    @Builder.Default
-    private OrderStatus status = OrderStatus.INPROGRESS;
+    private OrderStatus status;
 
     private LocalDateTime completed;
 
     private Customer customer;
 
-    private boolean isDeleted = false;
-
-    private LocalDateTime deletedAt;
-
     private Set<OrderItem> orderItems;
+
+    private Payment payment;
+
+    public boolean isFinalDeal() {
+        return OrderStatus.DELIVERED.equals(this.status) || OrderStatus.RETURNED.equals(this.status);
+    }
 }

@@ -1,25 +1,19 @@
-package com.inikitagricenko.demo.stripe.model;
+package com.inikitagricenko.demo.stripe.model.dto;
 
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Data
-public class AnalyticsSearch implements Serializable {
-
-    @Schema(example = "INPROGRESS")
-    private final OrderStatus status;
+public record AnalyticsSearch(
+    @Schema(example = "INPROGRESS") OrderStatus status,
 
     @Schema(example = "2007-12-03", description = "years-month-days")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private final LocalDate from;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
 
     @Schema(example = "2022-09-26", description = "years-month-days")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-    private final LocalDate to;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) implements Serializable {
 
 }

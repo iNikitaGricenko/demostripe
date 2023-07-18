@@ -1,42 +1,58 @@
 package com.inikitagricenko.demo.stripe.service;
 
-import com.inikitagricenko.demo.stripe.adapter.CustomerInputAdapter;
-import com.inikitagricenko.demo.stripe.adapter.CustomerOutputAdapter;
+import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
 import com.inikitagricenko.demo.stripe.model.Customer;
+import com.inikitagricenko.demo.stripe.persistence.CustomerPersistence;
+import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
+import com.inikitagricenko.demo.stripe.service.stripe.StripeCustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CustomerService implements CustomerInputAdapter, CustomerOutputAdapter {
+public class CustomerService implements ICustomerService {
 
 	private final StripeCustomerService stripeCustomerService;
+	private final CustomerPersistence customerPersistence;
 
 	@Override
+	@PerformanceMonitor
 	public Long addCustomer(Customer customer) {
-		stripeCustomerService.addCustomer(customer.getEmail());
-		// TODO Save customer in database
-		return null; // TODO Return customerId from database
+		String reference = stripeCustomerService.addCustomer(customer).getId();
+		customer.setStripeReference(reference);
+		customer.setRegisterDate(LocalDateTime.now());
+		return customerPersistence.save(customer);
 	}
 
 	@Override
+	@PerformanceMonitor
 	public void deleteCustomer(Long customerId) {
-		// TODO Retrieve customer email from database
-		// TODO Delete customer from stripe stripeCustomerService.deleteCustomer(customer.getEmail());
-		// TODO Delete customer from database
+		String reference = retrieve(customerId).getStripeReference();
+		stripeCustomerService.deleteCustomer(reference);
+		customerPersistence.delete(customerId);
 	}
 
 	@Override
+	@PerformanceMonitor
 	public List<Customer> retrieveAll() {
-		return new ArrayList<>(); // TODO Retrieve all customers from database -> stripe
+		return customerPersistence.findAll();
 	}
 
 	@Override
+	@PerformanceMonitor
 	public Customer retrieve(Long customerId) {
-		return null; // TODO Retrieve customer from database -> stripe
+		Customer customer = customerPersistence.findById(customerId);
+		stripeCustomerService.retrieve(customer.getStripeReference());
+		return customer;
+	}
+
+	@Override
+	@PerformanceMonitor
+	public Customer retrieve(String email) {
+		return customerPersistence.findByEmail(email);
 	}
 
 }

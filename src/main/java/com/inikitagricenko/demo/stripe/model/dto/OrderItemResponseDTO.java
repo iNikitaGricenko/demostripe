@@ -7,8 +7,10 @@ import java.io.Serializable;
 
 @Data
 public class OrderItemResponseDTO implements Serializable {
-    @Schema(example = "3")
+    @Schema(example = "1")
     private final Long id;
+    @Schema(example = "3")
+    private final Long productId;
     @Schema(example = "Intel Core i3")
     private final String name;
     @Schema(example = "i83da")

@@ -1,7 +1,11 @@
 package com.inikitagricenko.demo.stripe.controller;
 
-import com.inikitagricenko.demo.stripe.model.AnalyticsResponse;
-import com.inikitagricenko.demo.stripe.model.AnalyticsSearch;
+import com.inikitagricenko.demo.stripe.adapter.CustomerOrderInputAdapter;
+import com.inikitagricenko.demo.stripe.adapter.CustomerOrderOutputAdapter;
+import com.inikitagricenko.demo.stripe.mapper.CustomerOrderMapper;
+import com.inikitagricenko.demo.stripe.model.CustomerOrder;
+import com.inikitagricenko.demo.stripe.model.dto.AnalyticsResponse;
+import com.inikitagricenko.demo.stripe.model.dto.AnalyticsSearch;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerOrderRequestDTO;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerOrderResponseDTO;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
@@ -11,10 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,33 +25,43 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderRestController {
 
+    private final CustomerOrderInputAdapter customerOrderInputAdapter;
+    private final CustomerOrderOutputAdapter customerOrderOutputAdapter;
+    private final CustomerOrderMapper customerOrderMapper;
+
     @GetMapping
-    @PageableAsQueryParam
     public List<CustomerOrderResponseDTO> retrieveAllOrders() {
-        return new ArrayList<>();
+        return customerOrderMapper.toResponse(customerOrderOutputAdapter.retrieveAll());
     }
 
     @GetMapping("/{id}")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerOrderResponseDTO.class)))
     public CustomerOrderResponseDTO retrieveOrder(@PathVariable("id") Long id) {
-        return null;
+        return customerOrderMapper.toResponse(customerOrderOutputAdapter.retrieve(id));
     }
 
     @GetMapping("/analytics")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = AnalyticsResponse.class)))
     public AnalyticsResponse getAnalytics(@ModelAttribute @Valid AnalyticsSearch analyticsSearchDTO) {
-        return null;
+        return customerOrderOutputAdapter.getAnalytics(analyticsSearchDTO);
     }
 
     @PostMapping
-    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerOrderResponseDTO.class)))
-    public CustomerOrderResponseDTO addOrder(@Valid @RequestBody CustomerOrderRequestDTO requestDTO) {
-        return null;
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Long.class)))
+    public long payOrder(@Valid @RequestBody CustomerOrderRequestDTO requestDTO) {
+        CustomerOrder order = customerOrderMapper.toOrder(requestDTO);
+        return customerOrderInputAdapter.pay(order);
     }
 
-    @PutMapping("/status/{id}")
-    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = CustomerOrderResponseDTO.class)))
-    public CustomerOrderResponseDTO updateOrderStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
-        return null;
+    @PostMapping("/{id}")
+    @ApiResponse(responseCode = "200")
+    public void confirmPay(@PathVariable Long id) {
+        customerOrderInputAdapter.confirmPay(id);
+    }
+
+    @PutMapping("/delivery/{id}")
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Long.class)))
+    public long updateOrderDeliveryStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
+        return customerOrderInputAdapter.updateDeliveryStatus(id, status);
     }
 }

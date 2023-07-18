@@ -1,19 +1,31 @@
 package com.inikitagricenko.demo.stripe.mapper;
 
+import com.inikitagricenko.demo.stripe.entity.CustomerOrderEntity;
 import com.inikitagricenko.demo.stripe.model.CustomerOrder;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerOrderRequestDTO;
 import com.inikitagricenko.demo.stripe.model.dto.CustomerOrderResponseDTO;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
+
+import java.util.List;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface CustomerOrderMapper {
-    CustomerOrder toOrderFromRequest(CustomerOrderRequestDTO customerOrderRequestDTO);
+    CustomerOrder toOrder(CustomerOrderRequestDTO customerOrderRequestDTO);
 
-    CustomerOrderRequestDTO toRequestDTO(CustomerOrder customerOrder);
+    CustomerOrderRequestDTO toRequest(CustomerOrder customerOrder);
 
-    CustomerOrder toOrderFromResponse(CustomerOrderResponseDTO customerOrderResponseDTO);
+    CustomerOrder toOrder(CustomerOrderResponseDTO customerOrderResponseDTO);
 
-    CustomerOrderResponseDTO toResponseDTO(CustomerOrder customerOrder);
+    CustomerOrderResponseDTO toResponse(CustomerOrder customerOrder);
 
+    List<CustomerOrderResponseDTO> toResponse(List<CustomerOrder> customerOrder);
+
+    CustomerOrderEntity toEntity(CustomerOrder customer);
+
+    CustomerOrder toOrder(CustomerOrderEntity customerOrderEntity);
+
+    List<CustomerOrder> toOrders(List<CustomerOrderEntity> customerOrderEntity);
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    CustomerOrderEntity partialUpdate(CustomerOrder updater, @MappingTarget CustomerOrderEntity entity);
 }
