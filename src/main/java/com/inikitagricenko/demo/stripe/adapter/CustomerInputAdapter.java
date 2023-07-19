@@ -8,4 +8,5 @@ public interface CustomerInputAdapter {
 
 	void deleteCustomer(Long customerId);
 
+	long update(Long id, Customer customer);
 }

@@ -36,6 +36,11 @@ public class CustomerService implements ICustomerService {
 	}
 
 	@Override
+	public long update(Long id, Customer customer) {
+		return customerPersistence.update(id, customer);
+	}
+
+	@Override
 	@PerformanceMonitor
 	public List<Customer> retrieveAll() {
 		return customerPersistence.findAll();

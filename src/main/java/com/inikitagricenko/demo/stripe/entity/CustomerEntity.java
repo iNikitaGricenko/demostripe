@@ -25,6 +25,9 @@ public class CustomerEntity {
     @Column(name = "stripe_reference")
     private String stripeReference;
 
+    @Column(name = "card_reference")
+		private String card;
+
     @Column(name = "first_name")
     private String firstName;
 

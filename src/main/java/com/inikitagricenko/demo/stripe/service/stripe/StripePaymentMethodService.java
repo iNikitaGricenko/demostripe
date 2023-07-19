@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.service.stripe;
 
+import com.inikitagricenko.demo.stripe.config.annotations.PaymentValidation;
 import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
 import com.inikitagricenko.demo.stripe.handler.error.InvalidPaymentMethod;
 import com.inikitagricenko.demo.stripe.model.CustomerOrder;
@@ -21,6 +22,7 @@ import static com.stripe.param.PaymentMethodCreateParams.*;
 public class StripePaymentMethodService {
 
 	@Async
+	@PaymentValidation
 	public CompletableFuture<PaymentMethod> create(CustomerOrder order, String customer) {
 		return CompletableFuture.supplyAsync(() -> {
 			try {

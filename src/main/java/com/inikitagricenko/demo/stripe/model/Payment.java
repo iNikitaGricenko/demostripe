@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Value
 public class Payment implements Serializable {
 
-	@NotNull
+	@NotNull(message = "")
 	@NotEmpty
 	@Pattern(regexp = "[0-9]+")
 	@CreditCardNumber

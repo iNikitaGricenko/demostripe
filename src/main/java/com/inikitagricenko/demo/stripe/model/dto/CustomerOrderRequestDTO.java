@@ -45,7 +45,5 @@ public class CustomerOrderRequestDTO implements Serializable {
     @NotNull
     private final Set<OrderItemRequestDTO> orderItems;
 
-    @Valid
-    @NotNull
     private final Payment payment;
 }

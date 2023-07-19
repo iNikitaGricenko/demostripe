@@ -1,12 +1,13 @@
 package com.inikitagricenko.demo.stripe.config;
 
 import com.inikitagricenko.demo.stripe.handler.error.DefaultBackendException;
-import com.inikitagricenko.demo.stripe.model.CustomerOrder;
-import com.inikitagricenko.demo.stripe.model.OrderItem;
-import com.inikitagricenko.demo.stripe.model.Product;
-import com.inikitagricenko.demo.stripe.model.Subscription;
+import com.inikitagricenko.demo.stripe.model.*;
 import com.inikitagricenko.demo.stripe.service.interfaces.IProductService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
 public class AopConfiguration {
 
 	private final IProductService productService;
+	private final Validator validator;
 
 	@Pointcut("@annotation(com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor)")
 	public void performanceMonitor() { }
@@ -49,6 +51,9 @@ public class AopConfiguration {
 
 	@Pointcut("@annotation(com.inikitagricenko.demo.stripe.config.annotations.ProductValidation) && args(subscription,..)")
 	public void productListValidator(Subscription subscription) { }
+
+	@Pointcut("@annotation(com.inikitagricenko.demo.stripe.config.annotations.PaymentValidation) && args(customerOrder,..)")
+	public void paymentValidator(CustomerOrder customerOrder) { }
 
 	@Bean
 	public PerformanceMonitorInterceptor performanceMonitorInterceptor() {
@@ -98,6 +103,18 @@ public class AopConfiguration {
 			//Log method execution time
 			log.info("{}.{} Execution time :: {} ms", className, methodName, stopWatch.getTotalTimeMillis());
 		}
+	}
+
+	@Before(value = "paymentValidator(customerOrder)", argNames = "customerOrder")
+	public void doValidatePayment(CustomerOrder customerOrder) {
+		Payment payment = customerOrder.getPayment();
+		if (payment == null) {
+			throw new ValidationException("Payment must not be null");
+		}
+		Set<ConstraintViolation<Payment>> violations = validator.validate(payment);
+		if (!violations.isEmpty()) {
+      throw new ConstraintViolationException(violations);
+    }
 	}
 
 	@Before(value = "orderItemsValidator(customerOrder)", argNames = "customerOrder")
