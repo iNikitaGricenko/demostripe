@@ -10,4 +10,6 @@ public interface CustomerOutputAdapter {
 
 	Customer retrieve(Long customerId);
 
+	Customer retrieve(String email);
+
 }

@@ -26,4 +26,8 @@ public class Customer {
 		private String card;
 
     private LocalDateTime registerDate;
+
+    public String getFullName() {
+        return "%s %s".formatted(firstName, secondName);
+    }
 }

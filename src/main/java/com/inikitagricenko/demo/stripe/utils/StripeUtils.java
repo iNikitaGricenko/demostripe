@@ -28,7 +28,7 @@ public class StripeUtils {
 	public ChargeCreateParams.Shipping exctractShipping(CustomerOrder order) {
 		return ChargeCreateParams.Shipping.builder()
 				.setAddress(exctractAddress(order))
-				.setName(order.getCustomer().getFirstName())
+				.setName(order.getCustomer().getFullName())
 				.setPhone(order.getCustomer().getPhone())
 				.build();
 	}

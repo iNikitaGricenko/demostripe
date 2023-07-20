@@ -28,14 +28,14 @@ public class ProductController {
 	private final ProductMapper productMapper;
 
 	@GetMapping
-	public List<ProductResponseDTO> retrieveAllProducts() {
+	public @ResponseBody List<ProductResponseDTO> retrieveAllProducts() {
 		List<Product> products = productOutputAdapter.retrieveAll();
 		return productMapper.toResponses(products);
 	}
 
 	@GetMapping("/{id}")
 	@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ProductResponseDTO.class)))
-	public ProductResponseDTO retrieveOrder(@PathVariable("id") Long id) {
+	public @ResponseBody ProductResponseDTO retrieveOrder(@PathVariable("id") Long id) {
 		Product retrieved = productOutputAdapter.retrieve(id);
 		return productMapper.toResponse(retrieved);
 	}

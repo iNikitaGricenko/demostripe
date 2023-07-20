@@ -6,6 +6,5 @@ import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
 import com.inikitagricenko.demo.stripe.model.Customer;
 
 public interface ICustomerService extends CustomerInputAdapter, CustomerOutputAdapter {
-	@PerformanceMonitor
-	Customer retrieve(String email);
+
 }

@@ -8,6 +8,7 @@ import com.inikitagricenko.demo.stripe.model.dto.AnalyticsResponse;
 import com.inikitagricenko.demo.stripe.model.dto.AnalyticsSearch;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
 import com.inikitagricenko.demo.stripe.persistence.CustomerOrderPersistence;
+import com.inikitagricenko.demo.stripe.service.interfaces.IOderItemService;
 import com.inikitagricenko.demo.stripe.service.interfaces.IOrderService;
 import com.inikitagricenko.demo.stripe.service.interfaces.IProductService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class OrderService implements IOrderService {
 
+	private final IOderItemService oderItemService;
 	private final PaymentAdapter paymentAdapter;
 	private final IProductService productService;
 	private final AnalyticsService analyticsService;
@@ -43,6 +45,18 @@ public class OrderService implements IOrderService {
 	public void confirmPay(Long orderId) {
 		CustomerOrder retrieved = retrieve(orderId);
 		paymentAdapter.confirm(retrieved.getStripeReference());
+		retrieved.setStatus(OrderStatus.STARTED);
+		customerOrderPersistence.update(orderId, retrieved);
+	}
+
+	@Async
+	@Override
+	public void cancelPay(Long orderId) {
+		CustomerOrder retrieved = retrieve(orderId);
+		double totalOrderPrice = oderItemService.getTotalOrderPrice(retrieved.getOrderItems());
+		paymentAdapter.cancel(retrieved.getStripeReference(), (long) totalOrderPrice);
+		retrieved.setStatus(OrderStatus.RETURNED);
+		customerOrderPersistence.update(orderId, retrieved);
 	}
 
 	@Async

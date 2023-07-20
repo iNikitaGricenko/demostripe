@@ -24,13 +24,13 @@ public class SubscriptionController {
 	private final SubscriptionMapper subscriptionMapper;
 
 	@GetMapping
-	public List<SubscriptionResponseDTO> retrieveSubscriptions() {
+	public @ResponseBody List<SubscriptionResponseDTO> retrieveSubscriptions() {
 		List<Subscription> subscriptions = subscriptionOutputAdapter.retrieveAll();
 		return subscriptionMapper.toResponse(subscriptions);
 	}
 
 	@GetMapping("/{subscriptionId}")
-	public SubscriptionResponseDTO retrieveSubscription(@PathVariable Long subscriptionId) {
+	public @ResponseBody SubscriptionResponseDTO retrieveSubscription(@PathVariable Long subscriptionId) {
 		Subscription subscription = subscriptionOutputAdapter.retrieve(subscriptionId);
 		return subscriptionMapper.toResponse(subscription);
 	}

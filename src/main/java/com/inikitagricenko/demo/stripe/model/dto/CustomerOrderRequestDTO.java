@@ -37,7 +37,6 @@ public class CustomerOrderRequestDTO implements Serializable {
     @NotNull
     private final String zipCode;
 
-    @Valid
     @NotNull
     private final CustomerRequestDTO customer;
 

@@ -1,7 +1,7 @@
 package com.inikitagricenko.demo.stripe.model.enums;
 
 public enum OrderStatus {
-    INPROGRESS, PENDING, DELIVERED, RETURNED;
+    STARTED, INPROGRESS, PENDING, DELIVERED, RETURNED, REFUNDED;
 
     @Override
     public String toString() {

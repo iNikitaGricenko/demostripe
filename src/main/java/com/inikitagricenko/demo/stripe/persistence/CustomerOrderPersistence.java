@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class CustomerOrderPersistence {
 
 	public long save(CustomerOrder customer) {
 		CustomerOrderEntity entity = customerMapper.toEntity(customer);
+		entity.setCreated(LocalDateTime.now());
 		return customerRepository.save(entity).getId();
 	}
 
@@ -49,5 +51,10 @@ public class CustomerOrderPersistence {
 	public List<OrderItem> getAllByStatusAndCompletedBetween(OrderStatus status, LocalDateTime from, LocalDateTime to) {
 		List<CustomerOrderEntity> orderEntities = customerRepository.findAllByStatusAndCompletedBetween(status, from, to);
 		return customerMapper.toOrders(orderEntities).stream().flatMap(order -> order.getOrderItems().stream()).toList();
+	}
+
+	public Stream<CustomerOrderEntity> findAllUncaptured() {
+		LocalDateTime created = LocalDateTime.now().minusDays(7);
+		return customerRepository.streamAllByStatusIsNullAndCreated(created);
 	}
 }
