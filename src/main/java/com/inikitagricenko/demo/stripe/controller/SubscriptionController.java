@@ -45,7 +45,7 @@ public class SubscriptionController implements SubscriptionEndpoint {
 
 	@Override
 	@PostMapping("/subscribe/{subscriptionId}/{customerId}")
-	public long subscribeCustomer(@PathVariable("subscriptionId") long subscriptionId, @PathVariable("customerId") long customerId) {
+	public long subscribeCustomer(@PathVariable long subscriptionId, @PathVariable long customerId) {
 		return subscriptionInputAdapter.subscribeCustomer(subscriptionId, customerId);
 	}
 
@@ -59,6 +59,12 @@ public class SubscriptionController implements SubscriptionEndpoint {
 	@DeleteMapping("/{subscriptionId}")
 	public void cancelSubscription(@PathVariable Long subscriptionId) {
 		subscriptionInputAdapter.cancel(subscriptionId);
+	}
+
+	@Override
+	@PutMapping("/discount/{subscriptionId}")
+	public long updateDiscount(@PathVariable Long subscriptionId, long discount) {
+		return subscriptionInputAdapter.updateDiscount(subscriptionId, discount);
 	}
 
 }

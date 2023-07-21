@@ -1,7 +1,7 @@
 package com.inikitagricenko.demo.stripe.service;
 
-import com.inikitagricenko.demo.stripe.config.annotations.ProductValidation;
 import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
+import com.inikitagricenko.demo.stripe.config.annotations.ProductValidation;
 import com.inikitagricenko.demo.stripe.model.Customer;
 import com.inikitagricenko.demo.stripe.model.Subscription;
 import com.inikitagricenko.demo.stripe.persistence.SubscriptionPersistence;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -70,6 +69,14 @@ public class SubscriptionService implements ISubscriptionService {
 		String reference = retrieve(subscriptionId).getStripeReference();
 		stripeSubscriptionService.resume(reference);
 		subscriptionPersistence.undelete(subscriptionId);
+	}
+
+	@Override
+	@PerformanceMonitor
+	public long updateDiscount(Long subscriptionId, Long discount) {
+		Subscription retrieved = retrieve(subscriptionId);
+		retrieved.setDiscount(discount);
+		return subscriptionPersistence.update(subscriptionId, retrieved);
 	}
 
 	@Override

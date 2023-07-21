@@ -103,4 +103,20 @@ public interface SubscriptionEndpoint {
 					description = "Subscription not found")
 	})
 	void cancelSubscription(@PathVariable Long subscriptionId);
+
+
+	@PutMapping("/discount/{subscriptionId}")
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200",
+					content = @Content(schema = @Schema(
+							implementation = Long.class)),
+					description = "Update subscription discount"),
+			@ApiResponse(
+					responseCode = "403",
+					content = @Content(mediaType = "application/json", schema = @Schema(
+							implementation = ErrorBody.class)),
+					description = "Subscription by id not found")
+	})
+	long updateDiscount(@PathVariable Long subscriptionId, @RequestParam("discount") long discount);
 }

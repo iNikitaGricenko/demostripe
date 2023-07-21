@@ -35,7 +35,7 @@ public class OrderRestController implements OrderEndpoint {
 
     @Override
     @GetMapping("/{id}")
-    public CustomerOrderResponseDTO retrieveOrder(@PathVariable("id") Long id) {
+    public CustomerOrderResponseDTO retrieveOrder(@PathVariable Long id) {
         return customerOrderMapper.toResponse(customerOrderOutputAdapter.retrieve(id));
     }
 
@@ -70,7 +70,7 @@ public class OrderRestController implements OrderEndpoint {
 
     @Override
     @PutMapping("/delivery/{id}")
-    public long updateOrderDeliveryStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
+    public long updateOrderDeliveryStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
         return customerOrderInputAdapter.updateDeliveryStatus(id, status);
     }
 

@@ -32,7 +32,7 @@ public class ProductController implements ProductEndpoint {
 
 	@Override
 	@GetMapping("/{id}")
-	public ProductResponseDTO retrieveOrder(@PathVariable("id") Long id) {
+	public ProductResponseDTO retrieveOrder(@PathVariable Long id) {
 		Product retrieved = productOutputAdapter.retrieve(id);
 		return productMapper.toResponse(retrieved);
 	}

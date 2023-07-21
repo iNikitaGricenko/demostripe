@@ -14,4 +14,7 @@ public interface SubscriptionInputAdapter {
 
 	@PerformanceMonitor
 	void resume(Long subscriptionId);
+
+	@PerformanceMonitor
+	long updateDiscount(Long subscriptionId, Long discount);
 }
