@@ -17,21 +17,21 @@ import java.util.List;
 public class SubscriptionCreateDTO implements Serializable {
 	Long id;
 
-	@NotNull(message = "name should not be null")
-	@NotEmpty(message = "name should not be empty")
+	@NotNull(message = "Subscription 'name' should not be null")
+	@NotEmpty(message = "Subscription 'name' should not be empty")
 	String name;
 
-	@NotNull(message = "currency should not be null")
+	@NotNull(message = "Subscription 'currency' should not be null")
 	Currency currency;
 
-	@NotNull(message = "description should not be null")
+	@NotNull(message = "Subscription 'description' should not be null")
 	String description;
 
-	@NotNull(message = "discount should not be null")
+	@NotNull(message = "Subscription 'discount' should not be null")
 	Long discount;
 
-	@NotEmpty(message = "products should not be empty")
-	@NotNull(message = "products should not be null")
 	@JsonProperty("products")
+	@NotEmpty(message = "Subscription 'products' should not be empty")
+	@NotNull(message = "Subscription 'products' should not be null")
 	List<ProductRequestDTO> productList;
 }
