@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -21,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StripeSubscriptionService {
 
-	public Subscription subscribeCustomer(String customerId, List<Product> productList) {
+	public Subscription subscribeCustomer(String customerId, Collection<Product> productList) {
 		try {
 			List<SubscriptionCreateParams.Item> items = productList.stream().map(this::convertProduct).toList();
 

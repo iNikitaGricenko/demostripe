@@ -2,48 +2,63 @@ package com.inikitagricenko.demo.stripe.controller;
 
 import com.inikitagricenko.demo.stripe.adapter.SubscriptionInputAdapter;
 import com.inikitagricenko.demo.stripe.adapter.SubscriptionOutputAdapter;
+import com.inikitagricenko.demo.stripe.controller.interfaces.SubscriptionEndpoint;
 import com.inikitagricenko.demo.stripe.mapper.SubscriptionMapper;
 import com.inikitagricenko.demo.stripe.model.Subscription;
-import com.inikitagricenko.demo.stripe.model.dto.SubscriptionRequestDTO;
+import com.inikitagricenko.demo.stripe.model.dto.SubscriptionCreateDTO;
 import com.inikitagricenko.demo.stripe.model.dto.SubscriptionResponseDTO;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import com.inikitagricenko.demo.stripe.wrapper.SubscriptionPage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/subscription")
-@Tag(name = "Subscription API")
 @RequiredArgsConstructor
-public class SubscriptionController {
+public class SubscriptionController implements SubscriptionEndpoint {
 
 	private final SubscriptionInputAdapter subscriptionInputAdapter;
 	private final SubscriptionOutputAdapter subscriptionOutputAdapter;
 	private final SubscriptionMapper subscriptionMapper;
 
+	@Override
 	@GetMapping
-	public @ResponseBody List<SubscriptionResponseDTO> retrieveSubscriptions() {
-		List<Subscription> subscriptions = subscriptionOutputAdapter.retrieveAll();
-		return subscriptionMapper.toResponse(subscriptions);
+	public SubscriptionPage retrieveSubscriptions(Pageable pageable) {
+		Page<Subscription> subscriptions = subscriptionOutputAdapter.retrieveAll(pageable);
+		return new SubscriptionPage(subscriptions.map(subscriptionMapper::toResponse));
 	}
 
+	@Override
 	@GetMapping("/{subscriptionId}")
-	public @ResponseBody SubscriptionResponseDTO retrieveSubscription(@PathVariable Long subscriptionId) {
+	public SubscriptionResponseDTO retrieveSubscription(@PathVariable Long subscriptionId) {
 		Subscription subscription = subscriptionOutputAdapter.retrieve(subscriptionId);
 		return subscriptionMapper.toResponse(subscription);
 	}
 
+	@Override
 	@PostMapping
-	public Long addSubscription(@Valid @RequestBody SubscriptionRequestDTO requestDTO) {
+	public long addSubscription(SubscriptionCreateDTO requestDTO) {
 		Subscription subscription = subscriptionMapper.toEntity(requestDTO);
 		return subscriptionInputAdapter.add(subscription);
 	}
 
+	@Override
+	@PostMapping("/subscribe/{subscriptionId}/{customerId}")
+	public long subscribeCustomer(@PathVariable("subscriptionId") long subscriptionId, @PathVariable("customerId") long customerId) {
+		return subscriptionInputAdapter.subscribeCustomer(subscriptionId, customerId);
+	}
+
+	@Override
 	@PostMapping("/{subscriptionId}")
 	public void resumeSubscription(@PathVariable Long subscriptionId) {
 		subscriptionInputAdapter.resume(subscriptionId);
+	}
+
+	@Override
+	@DeleteMapping("/{subscriptionId}")
+	public void cancelSubscription(@PathVariable Long subscriptionId) {
+		subscriptionInputAdapter.cancel(subscriptionId);
 	}
 
 }

@@ -24,6 +24,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StopWatch;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -128,7 +129,7 @@ public class AopConfiguration {
 	}
 
 	@Async
-	protected void validateOrderItems(Set<OrderItem> orderItems) {
+	protected void validateOrderItems(Collection<OrderItem> orderItems) {
 		List<Long> productIds = orderItems.stream().map(OrderItem::getProductId).collect(Collectors.toList());
 		if (!productService.exists(productIds)) {
 			throw new EntityNotFoundException("Product not found");
@@ -136,7 +137,7 @@ public class AopConfiguration {
 	}
 
 	@Async
-	protected void validateProductList(List<Product> productList) {
+	protected void validateProductList(Collection<Product> productList) {
 		List<Long> productIds = productList.stream().map(Product::getId).collect(Collectors.toList());
 		if (!productService.exists(productIds)) {
 			throw new EntityNotFoundException("Product not found");

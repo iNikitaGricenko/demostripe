@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -7,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerResponseDTO implements Serializable {
     @Schema(example = "1")
     private final Long id;

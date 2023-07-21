@@ -8,6 +8,8 @@ import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
 import com.inikitagricenko.demo.stripe.repository.CustomerOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,8 +42,8 @@ public class CustomerOrderPersistence {
 		return customerRepository.save(updated).getId();
 	}
 
-	public List<CustomerOrder> findAll() {
-		return customerRepository.findAll().stream().map(customerMapper::toOrder).toList();
+	public Page<CustomerOrder> findAll(Pageable pageable) {
+		return customerRepository.findAll(pageable).map(customerMapper::toOrder);
 	}
 
 	public void delete(long id) {

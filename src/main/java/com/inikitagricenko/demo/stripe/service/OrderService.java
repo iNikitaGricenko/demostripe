@@ -2,6 +2,7 @@ package com.inikitagricenko.demo.stripe.service;
 
 import com.inikitagricenko.demo.stripe.adapter.PaymentAdapter;
 import com.inikitagricenko.demo.stripe.config.annotations.ProductValidation;
+import com.inikitagricenko.demo.stripe.handler.error.BadRequestException;
 import com.inikitagricenko.demo.stripe.model.CustomerOrder;
 import com.inikitagricenko.demo.stripe.model.OrderItem;
 import com.inikitagricenko.demo.stripe.model.dto.AnalyticsResponse;
@@ -12,6 +13,8 @@ import com.inikitagricenko.demo.stripe.service.interfaces.IOderItemService;
 import com.inikitagricenko.demo.stripe.service.interfaces.IOrderService;
 import com.inikitagricenko.demo.stripe.service.interfaces.IProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +70,12 @@ public class OrderService implements IOrderService {
 	@Override
 	public long updateDeliveryStatus(Long id, OrderStatus status) {
 		CustomerOrder retrieved = retrieve(id);
+
+		OrderStatus retrievedStatus = retrieved.getStatus();
+		if (retrievedStatus != null && retrievedStatus.equals(OrderStatus.REFUNDED)) {
+			throw new BadRequestException("Invalid order to update status. Order status have status refunded");
+		}
+
 		retrieved.setStatus(status);
 
 		return customerOrderPersistence.save(retrieved);
@@ -74,8 +83,8 @@ public class OrderService implements IOrderService {
 
 
 	@Override
-	public List<CustomerOrder> retrieveAll() {
-		return customerOrderPersistence.findAll();
+	public Page<CustomerOrder> retrieveAll(Pageable pageable) {
+		return customerOrderPersistence.findAll(pageable);
 	}
 
 	@Override

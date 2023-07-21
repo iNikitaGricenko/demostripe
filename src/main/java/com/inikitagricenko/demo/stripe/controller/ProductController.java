@@ -3,46 +3,43 @@ package com.inikitagricenko.demo.stripe.controller;
 
 import com.inikitagricenko.demo.stripe.adapter.ProductInputAdapter;
 import com.inikitagricenko.demo.stripe.adapter.ProductOutputAdapter;
-import com.inikitagricenko.demo.stripe.model.dto.ProductRequestDTO;
+import com.inikitagricenko.demo.stripe.controller.interfaces.ProductEndpoint;
 import com.inikitagricenko.demo.stripe.mapper.ProductMapper;
 import com.inikitagricenko.demo.stripe.model.Product;
+import com.inikitagricenko.demo.stripe.model.dto.ProductRequestDTO;
 import com.inikitagricenko.demo.stripe.model.dto.ProductResponseDTO;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
+import com.inikitagricenko.demo.stripe.wrapper.ProductPage;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/product")
-@Tag(name = "Product API")
 @RequiredArgsConstructor
-public class ProductController {
+public class ProductController implements ProductEndpoint {
 
 	private final ProductInputAdapter productInputAdapter;
 	private final ProductOutputAdapter productOutputAdapter;
 	private final ProductMapper productMapper;
 
+	@Override
 	@GetMapping
-	public @ResponseBody List<ProductResponseDTO> retrieveAllProducts() {
-		List<Product> products = productOutputAdapter.retrieveAll();
-		return productMapper.toResponses(products);
+	public ProductPage retrieveAllProducts(Pageable pageable) {
+		Page<Product> products = productOutputAdapter.retrieveAll(pageable);
+		return new ProductPage(products.map(productMapper::toResponse));
 	}
 
+	@Override
 	@GetMapping("/{id}")
-	@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ProductResponseDTO.class)))
-	public @ResponseBody ProductResponseDTO retrieveOrder(@PathVariable("id") Long id) {
+	public ProductResponseDTO retrieveOrder(@PathVariable("id") Long id) {
 		Product retrieved = productOutputAdapter.retrieve(id);
 		return productMapper.toResponse(retrieved);
 	}
 
+	@Override
 	@PostMapping
-	@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ProductRequestDTO.class)))
-	public long addProduct(@Valid @RequestBody ProductRequestDTO requestDTO) {
+	public long addProduct(ProductRequestDTO requestDTO) {
 		Product product = productMapper.toProduct(requestDTO);
 		return productInputAdapter.add(product);
 	}

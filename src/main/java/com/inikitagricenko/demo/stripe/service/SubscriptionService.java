@@ -2,7 +2,7 @@ package com.inikitagricenko.demo.stripe.service;
 
 import com.inikitagricenko.demo.stripe.config.annotations.ProductValidation;
 import com.inikitagricenko.demo.stripe.config.annotations.PerformanceMonitor;
-import com.inikitagricenko.demo.stripe.model.Product;
+import com.inikitagricenko.demo.stripe.model.Customer;
 import com.inikitagricenko.demo.stripe.model.Subscription;
 import com.inikitagricenko.demo.stripe.persistence.SubscriptionPersistence;
 import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
@@ -10,10 +10,15 @@ import com.inikitagricenko.demo.stripe.service.interfaces.IProductService;
 import com.inikitagricenko.demo.stripe.service.interfaces.ISubscriptionService;
 import com.inikitagricenko.demo.stripe.service.stripe.StripeSubscriptionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 
 @Service
 @RequiredArgsConstructor
@@ -28,13 +33,27 @@ public class SubscriptionService implements ISubscriptionService {
 	@PerformanceMonitor
 	@ProductValidation
 	public Long add(Subscription subscription) {
-		String customerReference = customerService.retrieve(subscription.getCustomer().getId()).getStripeReference();
-		List<Product> products = productService.retrieveAll(subscription.getProductList().stream().map(Product::getId).toList());
-
-		String subscriptionReference = stripeSubscriptionService.subscribeCustomer(customerReference, products).getId();
-		subscription.setStripeReference(subscriptionReference);
 		subscription.setCreated(LocalDateTime.now());
 		return subscriptionPersistence.save(subscription);
+	}
+
+	@Override
+	@PerformanceMonitor
+	public long subscribeCustomer(long subscriptionId, long customerId) {
+		Subscription subscription = retrieve(subscriptionId);
+		Customer customer = customerService.retrieve(customerId);
+
+		String customerReference = customer.getStripeReference();
+		String subscriptionReference = stripeSubscriptionService.subscribeCustomer(customerReference, subscription.getProductList()).getId();
+
+		subscription.setStripeReference(subscriptionReference);
+		Optional.ofNullable(subscription.getCustomerList())
+				.filter(Predicate.not(Set::isEmpty))
+				.ifPresentOrElse(
+						list -> list.add(customer),
+						() -> subscription.setCustomerList(Set.of(customer)));
+
+		return subscriptionPersistence.update(subscriptionId, subscription);
 	}
 
 	@Override
@@ -55,8 +74,8 @@ public class SubscriptionService implements ISubscriptionService {
 
 	@Override
 	@PerformanceMonitor
-	public List<Subscription> retrieveAll() {
-		return subscriptionPersistence.findAll();
+	public Page<Subscription> retrieveAll(Pageable pageable) {
+		return subscriptionPersistence.findAll(pageable);
 	}
 
 	@Override

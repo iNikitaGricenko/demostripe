@@ -6,6 +6,8 @@ import com.inikitagricenko.demo.stripe.persistence.CustomerPersistence;
 import com.inikitagricenko.demo.stripe.service.interfaces.ICustomerService;
 import com.inikitagricenko.demo.stripe.service.stripe.StripeCustomerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -42,8 +44,8 @@ public class CustomerService implements ICustomerService {
 
 	@Override
 	@PerformanceMonitor
-	public List<Customer> retrieveAll() {
-		return customerPersistence.findAll();
+	public Page<Customer> retrieveAll(Pageable pageable) {
+		return customerPersistence.findAll(pageable);
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import com.inikitagricenko.demo.stripe.persistence.ProductPersistence;
 import com.inikitagricenko.demo.stripe.service.interfaces.IProductService;
 import com.inikitagricenko.demo.stripe.service.stripe.StripeProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,8 +60,8 @@ public class ProductService implements IProductService {
 
 	@Override
 	@PerformanceMonitor
-	public List<Product> retrieveAll() {
-		return productPersistence.findAll();
+	public Page<Product> retrieveAll(Pageable pageable) {
+		return productPersistence.findAll(pageable);
 	}
 
 	@Override

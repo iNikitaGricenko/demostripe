@@ -6,6 +6,8 @@ import com.inikitagricenko.demo.stripe.model.Customer;
 import com.inikitagricenko.demo.stripe.repository.CustomerRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,8 +36,8 @@ public class CustomerPersistence {
 		return customerRepository.save(updated).getId();
 	}
 
-	public List<Customer> findAll() {
-		return customerRepository.findAll().stream().map(customerMapper::toCustomer).toList();
+	public Page<Customer> findAll(Pageable pageable) {
+		return customerRepository.findAll(pageable).map(customerMapper::toCustomer);
 	}
 
 	public void delete(long id) {

@@ -5,7 +5,8 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class Subscription {
@@ -23,13 +24,13 @@ public class Subscription {
 
 	private Currency currency;
 
-	private Customer customer;
+	private Set<Customer> customerList = new HashSet<>();
 
 	private String description;
 
 	private Long discount;
 
-	private List<Product> productList;
+	private Set<Product> productList = new HashSet<>();
 
 	private String status;
 

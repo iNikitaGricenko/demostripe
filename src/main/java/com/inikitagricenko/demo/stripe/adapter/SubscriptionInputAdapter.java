@@ -7,6 +7,9 @@ public interface SubscriptionInputAdapter {
 
 	Long add(Subscription subscription);
 
+	@PerformanceMonitor
+	long subscribeCustomer(long subscriptionId, long customerId);
+
 	void cancel(Long subscriptionId);
 
 	@PerformanceMonitor

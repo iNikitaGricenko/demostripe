@@ -66,13 +66,18 @@ create TABLE subscription
     cancel_at        TIMESTAMP WITHOUT TIME ZONE,
     created          TIMESTAMP WITHOUT TIME ZONE,
     currency         INTEGER,
-    customer_id      BIGINT,
     description      VARCHAR(255),
     discount         BIGINT,
     status           VARCHAR(255),
     delete_at        TIMESTAMP WITHOUT TIME ZONE,
     deleted          BOOLEAN,
     CONSTRAINT pk_subscription PRIMARY KEY (subscription_id)
+);
+
+create TABLE subscription_customer
+(
+    customer_customer_id         BIGINT NOT NULL,
+    subscription_subscription_id BIGINT NOT NULL
 );
 
 create TABLE subscription_product_list
@@ -90,11 +95,14 @@ alter table customer
 alter table customer_order
     add CONSTRAINT FK_CUSTOMER_ORDER_ON_CUSTOMER FOREIGN KEY (customer_id) REFERENCES customer (customer_id);
 
-alter table subscription
-    add CONSTRAINT FK_SUBSCRIPTION_ON_CUSTOMER FOREIGN KEY (customer_id) REFERENCES customer (customer_id);
-
 alter table customer_order_items
     add CONSTRAINT fk_customer_order_items_on_customer_order_entity FOREIGN KEY (customer_order_id) REFERENCES customer_order (customer_order_id);
+
+alter table subscription_customer
+    add CONSTRAINT fk_subcus_on_customer_entity FOREIGN KEY (customer_customer_id) REFERENCES customer (customer_id);
+
+alter table subscription_customer
+    add CONSTRAINT fk_subcus_on_subscription_entity FOREIGN KEY (subscription_subscription_id) REFERENCES subscription (subscription_id);
 
 alter table subscription_product_list
     add CONSTRAINT fk_subprolis_on_product_entity FOREIGN KEY (product_list_product_id) REFERENCES product (product_id);

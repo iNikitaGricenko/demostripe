@@ -22,7 +22,7 @@ public class SubscriptionResponseDTO implements Serializable {
 	LocalDateTime cancelAt;
 	LocalDateTime created;
 	Currency currency;
-	Customer customer;
+	List<CustomerResponseDTO> customerList;
 	String description;
 	Long discount;
 	List<ProductResponseDTO> productList;

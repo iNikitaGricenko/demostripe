@@ -9,9 +9,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.SQLDelete;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -43,9 +41,8 @@ public class SubscriptionEntity {
 	@Column(name = "currency")
 	private Currency currency;
 
-	@ManyToOne
-	@JoinColumn(name = "customer_id")
-	private CustomerEntity customer;
+	@ManyToMany
+	private Set<CustomerEntity> customerList;
 
 	@Column(name = "description")
 	private String description;
@@ -54,8 +51,7 @@ public class SubscriptionEntity {
 	private Long discount;
 
 	@ManyToMany
-	@JoinColumn(name = "product_id")
-	private List<ProductEntity> productList = new ArrayList<>();
+	private Set<ProductEntity> productList;
 
 	@Column(name = "status")
 	private String status;

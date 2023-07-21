@@ -1,5 +1,6 @@
 package com.inikitagricenko.demo.stripe.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.inikitagricenko.demo.stripe.model.enums.Currency;
 import com.inikitagricenko.demo.stripe.model.enums.OrderStatus;
 import com.inikitagricenko.demo.stripe.model.enums.PaymentMethod;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CustomerOrderResponseDTO implements Serializable {
     @Schema(example = "1")
     private final Long id;

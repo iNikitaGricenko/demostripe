@@ -6,6 +6,8 @@ import com.inikitagricenko.demo.stripe.model.Product;
 import com.inikitagricenko.demo.stripe.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +35,8 @@ public class ProductPersistence {
 				.orElseThrow(EntityNotFoundException::new);
 	}
 
-	public List<Product> findAll() {
-		return productMapper.toProduct(productRepository.findAll());
+	public Page<Product> findAll(Pageable pageable) {
+		return productRepository.findAll(pageable).map(productMapper::toProduct);
 	}
 
 	public List<Product> findAll(List<Long> ids) {
