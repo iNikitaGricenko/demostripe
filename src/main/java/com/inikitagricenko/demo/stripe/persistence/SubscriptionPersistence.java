@@ -7,6 +7,7 @@ import com.inikitagricenko.demo.stripe.repository.SubscriptionRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -34,5 +35,10 @@ public class SubscriptionPersistence {
 
 	public void delete(long id) {
 		subscriptionRepository.deleteById(id);
+	}
+
+	@Transactional
+	public void undelete(Long subscriptionId) {
+		subscriptionRepository.undelete(subscriptionId);
 	}
 }

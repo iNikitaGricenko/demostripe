@@ -47,6 +47,14 @@ public class SubscriptionService implements ISubscriptionService {
 
 	@Override
 	@PerformanceMonitor
+	public void resume(Long subscriptionId) {
+		String reference = retrieve(subscriptionId).getStripeReference();
+		stripeSubscriptionService.resume(reference);
+		subscriptionPersistence.undelete(subscriptionId);
+	}
+
+	@Override
+	@PerformanceMonitor
 	public List<Subscription> retrieveAll() {
 		return subscriptionPersistence.findAll();
 	}
