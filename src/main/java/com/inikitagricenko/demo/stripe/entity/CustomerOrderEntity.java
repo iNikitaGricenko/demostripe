@@ -27,7 +27,7 @@ public class CustomerOrderEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "customer_order_id")
+    @Column(name = "order_id")
     private Long id;
 
     @Column(name = "stripe_reference")
@@ -84,8 +84,8 @@ public class CustomerOrderEntity {
     private LocalDateTime deletedAt;
 
     @ElementCollection
-    @CollectionTable(name = "customer_order_items", joinColumns = {
-            @JoinColumn(name = "customer_order_id", referencedColumnName = "customer_order_id")})
+    @CollectionTable(name = "order_items", joinColumns = {
+            @JoinColumn(name = "order_id", referencedColumnName = "order_id")})
     private Set<OrderItemEntity> orderItems = new HashSet<>();
 
     @Override

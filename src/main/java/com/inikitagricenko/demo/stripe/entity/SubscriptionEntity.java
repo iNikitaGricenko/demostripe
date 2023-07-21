@@ -41,7 +41,12 @@ public class SubscriptionEntity {
 	@Column(name = "currency")
 	private Currency currency;
 
-	@ManyToMany
+	@ManyToMany(targetEntity = CustomerEntity.class)
+	@JoinTable(
+			name = "subscription_customers",
+			joinColumns = @JoinColumn(name = "subscription_id"),
+			inverseJoinColumns = @JoinColumn(name = "customer_id")
+	)
 	private Set<CustomerEntity> customerList;
 
 	@Column(name = "description")
@@ -50,7 +55,12 @@ public class SubscriptionEntity {
 	@Column(name = "discount")
 	private Long discount;
 
-	@ManyToMany
+	@ManyToMany(targetEntity = ProductEntity.class)
+	@JoinTable(
+			name = "subscription_items",
+			joinColumns = @JoinColumn(name = "subscription_id"),
+			inverseJoinColumns = @JoinColumn(name = "product_id")
+	)
 	private Set<ProductEntity> productList;
 
 	@Column(name = "status")
