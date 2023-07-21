@@ -22,9 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StripeSubscriptionService {
 
-	public Subscription subscribeCustomer(String customerId, Collection<Product> productList) {
+	public Subscription subscribeCustomer(String customerId, long discount, Collection<Product> productList) {
 		try {
-			List<SubscriptionCreateParams.Item> items = productList.stream().map(this::convertProduct).toList();
+			List<SubscriptionCreateParams.Item> items = productList.stream().map(product -> convertProduct(product, discount)).toList();
 
 			SubscriptionCreateParams subscriptionCreateParams = SubscriptionCreateParams.builder()
 					.setCustomer(customerId)
@@ -95,7 +95,7 @@ public class StripeSubscriptionService {
 		}
 	}
 
-	private SubscriptionCreateParams.Item convertProduct(Product product) {
+	private SubscriptionCreateParams.Item convertProduct(Product product, long discount) {
 		SubscriptionCreateParams.Item.PriceData.Recurring recurring = SubscriptionCreateParams.Item.PriceData.Recurring.builder()
 				.setInterval(SubscriptionCreateParams.Item.PriceData.Recurring.Interval.MONTH)
 				.setIntervalCount(1L)
@@ -104,7 +104,7 @@ public class StripeSubscriptionService {
 		SubscriptionCreateParams.Item.PriceData priceData = SubscriptionCreateParams.Item.PriceData.builder()
 				.setCurrency(product.getCurrency().getAbbreviation())
 				.setProduct(product.getStripeReference())
-				.setUnitAmount(product.getUnitAmount())
+				.setUnitAmount(calculateAmountByDiscount(product.getUnitAmount(), discount))
 				.setRecurring(recurring)
 				.build();
 
@@ -112,5 +112,10 @@ public class StripeSubscriptionService {
 				.setPriceData(priceData)
 				.setQuantity(product.getQuantity())
 				.build();
+	}
+
+	private long calculateAmountByDiscount(Long unitAmount, long discount) {
+		long calculatedDiscount = unitAmount / 100 * discount;
+		return unitAmount - calculatedDiscount;
 	}
 }

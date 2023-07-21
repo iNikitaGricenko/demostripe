@@ -44,7 +44,7 @@ public class SubscriptionService implements ISubscriptionService {
 		Customer customer = customerService.retrieve(customerId);
 
 		String customerReference = customer.getStripeReference();
-		String subscriptionReference = stripeSubscriptionService.subscribeCustomer(customerReference, subscription.getProductList()).getId();
+		String subscriptionReference = stripeSubscriptionService.subscribeCustomer(customerReference, subscription.getDiscount(), subscription.getProductList()).getId();
 
 		subscription.setStripeReference(subscriptionReference);
 		Optional.ofNullable(subscription.getCustomerList())
