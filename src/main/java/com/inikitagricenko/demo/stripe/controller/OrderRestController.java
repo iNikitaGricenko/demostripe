@@ -63,6 +63,12 @@ public class OrderRestController {
         customerOrderInputAdapter.confirmPay(id);
     }
 
+    @DeleteMapping("/{id}")
+    @ApiResponse(responseCode = "200")
+    public void cancelPay(@PathVariable Long id) {
+        customerOrderInputAdapter.cancelPay(id);
+    }
+
     @PutMapping("/delivery/{id}")
     @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Long.class)))
     public long updateOrderDeliveryStatus(@PathVariable Long id, @RequestParam("status") OrderStatus status) {
