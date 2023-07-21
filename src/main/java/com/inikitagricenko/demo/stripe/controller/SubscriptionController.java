@@ -41,9 +41,9 @@ public class SubscriptionController {
 		return subscriptionInputAdapter.add(subscription);
 	}
 
-	@DeleteMapping("/{subscriptionId}")
-	public void cancelSubscription(@PathVariable Long subscriptionId) {
-		subscriptionInputAdapter.cancel(subscriptionId);
+	@PostMapping("/{subscriptionId}")
+	public void resumeSubscription(@PathVariable Long subscriptionId) {
+		subscriptionInputAdapter.resume(subscriptionId);
 	}
 
 }
